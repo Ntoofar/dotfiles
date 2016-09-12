@@ -27,6 +27,7 @@
  NeoBundle 'Valloric/YouCompleteMe'
  NeoBundle 'vim-airline/vim-airline-themes'
  NeoBundle 'vim-airline/vim-airline'
+ NeoBundle 'cohama/lexima.vim'
 
  " My Bundles here:
  " Refer to |:NeoBundle-examples|.
@@ -66,7 +67,9 @@
 
  " config YouCompleteMe
  let g:ycm_global_ycm_extra_conf = '/Users/Ntoofar/.ycm_extra_conf.py'
- let g:ycm_python_binary_path = '/usr/local/bin/python3'
+ " Use python3 completion
+ let g:ycm_path_to_python_interpreter = '/usr/local/bin/python3'
+ " let g:ycm_python_binary_path = '/usr/local/bin/python3'
  autocmd InsertLeave * if pumvisible() == 0|pclose|endif 
  autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 
@@ -121,6 +124,9 @@
  " config for backspace work in insert mode
  set backspace=2 " make backspace work like most other apps
  set backspace=indent,eol,start
+
+ " config for copy content from vim to clipboard
+ set clipboard=unnamed
 
  " Required:
  filetype plugin indent on
