@@ -8,13 +8,18 @@ system-wide files under `/etc` do not belong here.
 
 ## Install on a new machine
 
-Install `chezmoi`, then initialize and review the changes before applying:
+Install `chezmoi`, then initialize, review, and apply the configuration:
 
 ```sh
 chezmoi init git@github.com:Ntoofar/dotfiles.git
 chezmoi diff
 chezmoi apply --verbose
 ```
+
+Applying installs the pinned standalone `mise` binary and the configured Go,
+Node.js, uv, and VS Code versions directly from upstream archives. It never
+uses `apt-get`, `pacman`, or `emerge`. The host must already provide `curl`, Git,
+CA certificates, and common archive utilities.
 
 The first initialization asks for the local Git author name and email. Those
 values are written to the machine-local chezmoi configuration, not committed
@@ -40,7 +45,21 @@ files; retrieve them from a password manager when needed.
 - Git aliases and local identity template
 - tmux and its popup helper
 - Alacritty configuration and one pinned upstream theme
-- Guarded desktop launchers and optional development-tool paths
+- Guarded desktop launchers and optional legacy development-tool paths
+- A pinned, distribution-independent mise toolchain
+
+## Toolchain
+
+The global mise configuration is `~/.config/mise/config.toml`. Installed tools,
+cache, and runtime state remain machine-local under the standard mise data,
+cache, and state directories and are not committed. Project-level `mise.toml`
+files can override the global versions. The committed `mise.lock` records the
+resolved Linux x86-64 artifacts and checksums; regenerate it with
+`mise lock --global --platform linux-x64` when updating tool versions.
+
+Ubuntu, Gentoo, and Arch use the same configuration because mise downloads the
+user-level upstream artifacts. The VS Code archive supports glibc-based x86-64
+and ARM64 Linux hosts; it is not expected to work on a musl-based Gentoo host.
 
 Intentionally not migrated from the old environment repository:
 

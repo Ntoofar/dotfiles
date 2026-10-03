@@ -1,0 +1,28 @@
+min_version = "2026.9.17"
+
+[tools]
+go = "1.26.6"
+node = "26.7.0"
+uv = "0.12.5"
+
+[tools."http:vscode"]
+version = "1.133.0"
+strip_components = 1
+bin_path = "bin"
+
+[tools."http:vscode".platforms]
+linux-x64 = {
+    url = "https://update.code.visualstudio.com/{{version}}/linux-x64/stable",
+    format = "tar.gz",
+    checksum = "sha256:2bf1a90d2f008af009eb3c4a7bd0849b9247a0588cd39a404a0b1e691be68161",
+}
+linux-arm64 = { url = "https://update.code.visualstudio.com/{{version}}/linux-arm64/stable", format = "tar.gz" }
+
+[env]
+_.path = ["{{env.HOME}}/.go/bin"]
+GOPATH = "{{env.HOME}}/.go"
+GOPROXY = "https://goproxy.cn,direct"
+UV_DEFAULT_INDEX = "https://mirrors.aliyun.com/pypi/simple/"
+
+[settings]
+lockfile = true
