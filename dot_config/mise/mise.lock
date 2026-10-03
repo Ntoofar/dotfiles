@@ -12,17 +12,17 @@ checksum = "sha256:63d339f0da5ab53635a56f2490a7984dfe12dfcff22ad749f63edaf590168
 url = "https://dl.google.com/go/go1.27.1.linux-amd64.tar.gz"
 
 [[tools."http:vscode"]]
-version = "1.133.0"
+version = "1.140.0"
 backend = "http:vscode"
-specifiers = ["1"]
+specifiers = ["latest"]
 
 [tools."http:vscode".options]
 format = "tar.gz"
 strip_components = "1"
 
 [tools."http:vscode"."platforms.linux-x64"]
-checksum = "sha256:2bf1a90d2f008af009eb3c4a7bd0849b9247a0588cd39a404a0b1e691be68161"
-url = "https://update.code.visualstudio.com/1.133.0/linux-x64/stable"
+checksum = "sha256:d32031e9e213d59532af3cf32fcb8b357a1cdd10417967b4f5b5ba30436dc0dc"
+url = "https://update.code.visualstudio.com/1.140.0/linux-x64/stable"
 
 [[tools.node]]
 version = "26.10.0"
