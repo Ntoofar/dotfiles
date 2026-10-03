@@ -1,0 +1,13 @@
+.DS_Store
+*.swp
+*.tmp
+*~
+
+# Never commit rendered secrets or runtime state.
+*.pem
+*.ppk
+*.key
+*.secrets
+*.env
+cache.db
+*.history

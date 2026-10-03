@@ -1,0 +1,18 @@
+# ~/.bashrc: interactive Bash configuration managed by chezmoi.
+
+case $- in
+    *i*) ;;
+    *) return ;;
+esac
+
+for file in "$HOME"/.bashrc.d/*.sh; do
+    [[ -r "$file" ]] && source "$file"
+done
+unset file
+
+# Deliberately unmanaged per-machine overrides.
+[[ -r "$HOME/.bashrc.local" ]] && source "$HOME/.bashrc.local"
+
+export EDITOR="${EDITOR:-vim}"
+export VISUAL="${VISUAL:-$EDITOR}"
+PS1='[\u@\h \W]\$ '

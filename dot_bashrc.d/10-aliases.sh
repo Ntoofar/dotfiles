@@ -1,0 +1,22 @@
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias ll='ls -al'
+alias v='vim'
+alias g='git'
+
+alias k='kubectl'
+alias kg='kubectl get'
+alias kd='kind'
+alias kdcc='kind create cluster'
+alias kdgc='kind get clusters'
+alias kddcs='kind delete clusters'
+
+alias kc='kcluster'
+alias kcu='kcluster use'
+alias kcls='kcluster ls'
+alias kcup='kcluster up'
+alias kcdn='kcluster down'
+
+alias dbx='buildx-harbor'
+alias dbxon='buildx-harbor on'
+alias dbxoff='buildx-harbor off'

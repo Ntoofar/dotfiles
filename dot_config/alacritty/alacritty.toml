@@ -1,0 +1,32 @@
+[general]
+import = [
+    "~/.config/alacritty/themes/one_dark.toml"
+]
+
+[window]
+dynamic_padding = false
+opacity = 1.0
+title = "Alacritty"
+startup_mode = "Maximized"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 10.0
+
+[font.bold]
+family = "monospace"
+style = "Bold"
+
+[font.bold_italic]
+family = "monospace"
+style = "Bold Italic"
+
+[font.italic]
+family = "monospace"
+style = "Italic"
+
+[font.normal]
+family = "monospace"
+style = "Regular"

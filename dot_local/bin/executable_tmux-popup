@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+width=${1:-60}
+height=${2:-80}
+
+if [[ ! $width =~ ^([1-9]|[1-9][0-9]|100)$ ]] ||
+   [[ ! $height =~ ^([1-9]|[1-9][0-9]|100)$ ]]; then
+    printf 'usage: tmux-popup [width-percent] [height-percent]\n' >&2
+    exit 2
+fi
+
+if [[ $(tmux display-message -p -F '#{session_name}') == popup ]]; then
+    tmux detach-client
+else
+    tmux popup -d '#{pane_current_path}' \
+        -x "#{window_width} - (#{window_width} * $width / 100)" \
+        -y "#{window_height} - (#{window_height} * $height / 100)" \
+        -w "${width}%" -h "${height}%" \
+        -E 'tmux attach -t popup || tmux new-session -s popup'
+fi

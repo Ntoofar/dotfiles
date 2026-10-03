@@ -1,0 +1,4 @@
+[".config/alacritty/themes/one_dark.toml"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/alacritty/alacritty-theme/14794c3cc2dc1b4649f8b9b79a8833d2ce5bfd60/themes/one_dark.toml"
+    checksum.sha256 = "f28996a755f8944f88972cf3850432077b8aa43e7fb39cc5511897598961c5a3"
