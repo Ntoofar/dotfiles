@@ -48,6 +48,3 @@ Intentionally not migrated from the old environment repository:
 - The `pw` alias that printed a password file to the terminal
 - Obsolete `GO111MODULE=on`
 - `http.sslVerify=false` and `credential.helper=store`
-
-The old macOS tmux and NeoBundle/YouCompleteMe files are retained under
-`legacy/` for reference and are ignored by chezmoi.
