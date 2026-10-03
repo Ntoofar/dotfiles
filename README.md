@@ -40,6 +40,14 @@ files; retrieve them from a password manager when needed.
 - Git aliases and local identity template
 - tmux and its popup helper
 - Alacritty configuration and one pinned upstream theme
+- Guarded desktop launchers and optional development-tool paths
+
+Intentionally not migrated from the old environment repository:
+
+- The plaintext `GITLAB_TOKEN`
+- The `pw` alias that printed a password file to the terminal
+- Obsolete `GO111MODULE=on`
+- `http.sslVerify=false` and `credential.helper=store`
 
 The old macOS tmux and NeoBundle/YouCompleteMe files are retained under
 `legacy/` for reference and are ignored by chezmoi.

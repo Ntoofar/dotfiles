@@ -1,5 +1,6 @@
 proxy() {
     local address="${PROXY_ADDRESS:-127.0.0.1:17890}"
+    local no_proxy_extra="${NO_PROXY_EXTRA:-172.18.140.42}"
 
     case "${1:-status}" in
         on)
@@ -9,7 +10,7 @@ proxy() {
             export HTTP_PROXY="$http_proxy"
             export HTTPS_PROXY="$https_proxy"
             export ALL_PROXY="$all_proxy"
-            export no_proxy="localhost,127.0.0.1,::1${NO_PROXY_EXTRA:+,$NO_PROXY_EXTRA}"
+            export no_proxy="localhost,127.0.0.1,::1${no_proxy_extra:+,$no_proxy_extra}"
             export NO_PROXY="$no_proxy"
             printf '\033[32m[ok]\033[0m proxy on (%s)\n' "$address"
             ;;
