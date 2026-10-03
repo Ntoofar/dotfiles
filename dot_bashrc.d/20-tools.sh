@@ -9,7 +9,7 @@ for go_root in /opt/manual/go /usr/local/go; do
 done
 unset go_root
 
-export GOPATH="${GOPATH:-$HOME/.local/share/go}"
+export GOPATH="${GOPATH:-$HOME/.go}"
 path_prepend "$GOPATH/bin"
 
 for tool_bin in \
