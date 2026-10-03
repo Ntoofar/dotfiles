@@ -54,12 +54,14 @@ The global mise configuration is `~/.config/mise/config.toml`. Installed tools,
 cache, and runtime state remain machine-local under the standard mise data,
 cache, and state directories and are not committed. Project-level `mise.toml`
 files can override the global versions. The committed `mise.lock` records the
-resolved Linux x86-64 artifacts and checksums; regenerate it with
-`mise lock --global --platform linux-x64` when updating tool versions.
+resolved Linux x86-64 artifacts and checksums.
 
 Ubuntu, Gentoo, and Arch use the same configuration because mise downloads the
 user-level upstream artifacts. The VS Code archive supports glibc-based x86-64
 and ARM64 Linux hosts; it is not expected to work on a musl-based Gentoo host.
+VS Code versions are discovered from Microsoft's stable-release API, so update
+it with `mise upgrade http:vscode`. After changing tool versions manually,
+refresh the lockfile with `mise lock --global --platform linux-x64`.
 
 Intentionally not migrated from the old environment repository:
 

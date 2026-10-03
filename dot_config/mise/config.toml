@@ -1,12 +1,14 @@
 min_version = "2026.9.17"
 
 [tools]
-go = "1.26.6"
-node = "26.7.0"
-uv = "0.12.5"
+go = "1.27.1"
+node = "26.10.0"
+uv = "0.12.22"
 
 [tools."http:vscode"]
-version = "1.133.0"
+version = "1"
+version_list_url = "https://update.code.visualstudio.com/api/releases/stable"
+version_order = "semver"
 strip_components = 1
 bin_path = "bin"
 
@@ -14,7 +16,6 @@ bin_path = "bin"
 linux-x64 = {
     url = "https://update.code.visualstudio.com/{{version}}/linux-x64/stable",
     format = "tar.gz",
-    checksum = "sha256:2bf1a90d2f008af009eb3c4a7bd0849b9247a0588cd39a404a0b1e691be68161",
 }
 linux-arm64 = { url = "https://update.code.visualstudio.com/{{version}}/linux-arm64/stable", format = "tar.gz" }
 
