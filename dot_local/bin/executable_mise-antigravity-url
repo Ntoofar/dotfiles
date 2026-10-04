@@ -1,0 +1,39 @@
+#!/bin/sh
+# Resolve an Antigravity release to its exact upstream archive, not a guessed URL.
+set -eu
+
+fail() { printf 'mise-antigravity-url: %s\n' "$*" >&2; exit 1; }
+[ "$#" -ge 3 ] && [ "$#" -le 4 ] || fail 'usage: VERSION OS ARCH [LOCKFILE]'
+version=$1
+os=$2
+arch=$3
+printf '%s\n' "$version" | LC_ALL=C grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || fail 'expected a standard release version'
+[ "$os" = linux ] || fail 'only Linux is supported'
+case "$arch" in
+    x64) manifest_arch=amd64; archive_arch=x64 ;;
+    arm64) manifest_arch=arm64; archive_arch=arm ;;
+    *) fail "unsupported architecture: $arch" ;;
+esac
+lockfile=${4:-${XDG_CONFIG_HOME:-$HOME/.config}/mise/mise.lock}
+url=''
+if [ -f "$lockfile" ]; then
+    # mise emits quoted URL/version strings without escapes for these artifacts.
+    url=$(awk -F '"' -v wanted="$version" -v platform="linux-$arch" '
+        /^\[\[tools\./ { tool = ($0 == "[[tools.\"http:antigravity\"]]"); release = ""; target = 0 }
+        tool && /^version = / { release = $2 }
+        /^\[tools\./ { target = ($0 == "[tools.\"http:antigravity\".\"platforms." platform "\"]") }
+        tool && release == wanted && target && /^url = / { print $2; exit }
+    ' "$lockfile")
+fi
+if [ -z "$url" ]; then
+    manifest=$(curl --fail --silent --show-error --location --connect-timeout 10 --max-time 30 \
+        "https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests/linux_$manifest_arch.json")
+    field() { printf '%s\n' "$manifest" | sed -n 's/.*"'"$1"'"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p'; }
+    [ "$(field version)" = "$version" ] || fail "release $version is not in the current manifest; retain its mise.lock URL"
+    field sha512 | LC_ALL=C grep -Eq '^[0-9a-f]{128}$' || fail 'invalid manifest checksum'
+    url=$(field url)
+fi
+# Reject unexpected origins, paths, query strings, or a differently labelled build.
+version_pattern=$(printf '%s\n' "$version" | sed 's/\./[.]/g')
+printf '%s\n' "$url" | LC_ALL=C grep -Eq "^https://storage[.]googleapis[.]com/antigravity-public/antigravity-cli/$version_pattern-[0-9]+/linux-$archive_arch/cli_linux_$arch[.]tar[.]gz$" || fail 'invalid artifact URL'
+printf '%s\n' "$url"

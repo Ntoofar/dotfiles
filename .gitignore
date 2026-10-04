@@ -11,3 +11,20 @@
 *.env
 cache.db
 *.history
+
+# Never commit the rendered sing-box configuration.
+dot_config/private_sing-box/*
+!dot_config/private_sing-box/private_config.json.tmpl
+# Only the token-free glab template belongs in Git.
+dot_config/private_glab-cli/*
+!dot_config/private_glab-cli/private_config.yml.tmpl
+proxy-age-key.txt
+age-key.txt
+
+# Bitwarden runtime/export/session files are not dotfiles.
+**/Bitwarden CLI/
+**/bitwarden/
+bitwarden_export*
+bitwarden-export*
+bw-data.json
+*.bw-session

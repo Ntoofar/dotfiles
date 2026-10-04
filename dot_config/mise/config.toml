@@ -4,6 +4,24 @@ min_version = "2026.9.17"
 go = "1.27.1"
 node = "26.10.0"
 uv = "0.12.22"
+# Proxy config schemas can change: upgrade these pins deliberately, then validate.
+"github:sagernet/sing-box" = "1.14.2"
+# Claude's postinstall links the platform-native binary into its CLI launcher.
+"npm:@anthropic-ai/claude-code" = { version = "latest", allow_builds = ["@anthropic-ai/claude-code"] }
+"npm:@openai/codex" = "latest"
+# Credential tooling: review releases and bump this pin explicitly.
+"npm:@bitwarden/cli" = "2026.9.1"
+
+# Resolve Google's opaque artifact build ID separately from the release version.
+[tools."http:antigravity"]
+version = "latest"
+version_list_url = 'https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests/linux_{{ arch(x64="amd64") }}.json'
+version_json_path = ".version"
+url = '''{% raw %}{{ exec(command='"' ~ env.HOME ~ '/.local/bin/mise-antigravity-url" ' ~ version ~ ' ' ~ os() ~ ' ' ~ arch()) }}{% endraw %}'''
+checksum_url = 'https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests/linux_{{ arch(x64="amd64") }}.json'
+checksum_expr = 'fromJSON(body).url == url ? "sha512:" + fromJSON(body).sha512 : ""'
+format = "tar.gz"
+rename_exe = "agy"
 
 [tools."http:vscode"]
 version = "latest"
@@ -21,6 +39,9 @@ _.path = ["{{env.HOME}}/.go/bin"]
 GOPATH = "{{env.HOME}}/.go"
 GOPROXY = "https://goproxy.cn,direct"
 UV_DEFAULT_INDEX = "https://mirrors.aliyun.com/pypi/simple/"
+# mise owns upgrades; prevent the CLIs from replacing managed binaries.
+DISABLE_AUTOUPDATER = "1"
+AGY_CLI_DISABLE_AUTO_UPDATE = "true"
 
 [settings]
 lockfile = true

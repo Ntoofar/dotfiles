@@ -2,6 +2,17 @@
 
 lockfile_version = 3
 
+[[tools."github:sagernet/sing-box"]]
+version = "1.14.2"
+backend = "github:sagernet/sing-box"
+specifiers = ["1.14.2"]
+
+[tools."github:sagernet/sing-box"."platforms.linux-x64"]
+checksum = "sha256:5c7bc18461827b28d0e5ee7e89d33b276d3ff7c818531104c8e8d26d85b0656e"
+url = "https://github.com/SagerNet/sing-box/releases/download/v1.14.2/sing-box-1.14.2-linux-amd64-glibc.tar.gz"
+url_api = "https://api.github.com/repos/SagerNet/sing-box/releases/assets/585840737"
+provenance = "github-attestations"
+
 [[tools.go]]
 version = "1.27.1"
 backend = "core:go"
@@ -10,6 +21,23 @@ specifiers = ["1.27.1"]
 [tools.go."platforms.linux-x64"]
 checksum = "sha256:63d339f0da5ab53635a56f2490a7984dfe12dfcff22ad749f63edaf590168445"
 url = "https://dl.google.com/go/go1.27.1.linux-amd64.tar.gz"
+
+[[tools."http:antigravity"]]
+version = "1.2.16"
+backend = "http:antigravity"
+specifiers = ["latest"]
+
+[tools."http:antigravity".options]
+format = "tar.gz"
+rename_exe = "agy"
+
+[tools."http:antigravity"."platforms.linux-arm64"]
+checksum = "sha512:d17d8044736d31e24ce7c4cb3b75faef3ce5102ecaad31aef95785c0f3c13fa0615d7b11fa411eb73b848489adf9d411178446f3148e30353a2048cd3e731971"
+url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.2.16-5594158052802560/linux-arm/cli_linux_arm64.tar.gz"
+
+[tools."http:antigravity"."platforms.linux-x64"]
+checksum = "sha512:c31f09265d4f6aef7c03b5105661ae98f9a8365c6c812c68adcc4a5e1f8b8f96c05fd2e4408a52f5e87e1b561ac350f4ffa7ad41a191893be7a3730ccf9d6553"
+url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.2.16-5594158052802560/linux-x64/cli_linux_x64.tar.gz"
 
 [[tools."http:vscode"]]
 version = "1.140.0"
@@ -32,6 +60,27 @@ specifiers = ["26.10.0"]
 [tools.node."platforms.linux-x64"]
 checksum = "sha256:cb5c9ce9c80d7b8821e3a258543c71b939138cf17c74d5cc44bbe85d6dbc5ad8"
 url = "https://nodejs.org/dist/v26.10.0/node-v26.10.0-linux-x64.tar.gz"
+
+[[tools."npm:@anthropic-ai/claude-code"]]
+version = "2.1.288"
+aube = { path = "locks/npm-anthropic-ai-claude-code/2.1.288~c130a719", digest = "sha256:0cebe4e451b3aa9cda6a307093c1048118cfe5f68ab754b43eb0b87f3feac700" }
+backend = "npm:@anthropic-ai/claude-code"
+specifiers = ["latest"]
+
+[tools."npm:@anthropic-ai/claude-code".options]
+allow_builds = '["@anthropic-ai/claude-code"]'
+
+[[tools."npm:@bitwarden/cli"]]
+version = "2026.9.1"
+aube = { path = "locks/npm-bitwarden-cli/2026.9.1", digest = "sha256:f69c787c043eb8c6c292ce4cf1ec449b700842f9f363263d2b7e83aa208e4595" }
+backend = "npm:@bitwarden/cli"
+specifiers = ["2026.9.1"]
+
+[[tools."npm:@openai/codex"]]
+version = "0.160.0"
+aube = { path = "locks/npm-openai-codex/0.160.0", digest = "sha256:3ca7c1883e40c80b1a886d0ee5348dec716b084b626895a06a2593c158cab291" }
+backend = "npm:@openai/codex"
+specifiers = ["latest"]
 
 [[tools.uv]]
 version = "0.12.22"

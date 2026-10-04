@@ -1,0 +1,472 @@
+{{- $item := bitwarden "item" "proxy:sing-box" -}}
+{{- if ne $item.name "proxy:sing-box" -}}{{- fail "Unexpected sing-box Bitwarden item" -}}{{- end -}}
+{{- if index $item "deletedDate" -}}{{- fail "Sing-box Bitwarden item is deleted" -}}{{- end -}}
+{{- $fields := dict -}}
+{{- range $item.fields -}}
+  {{- if hasKey $fields .name -}}{{- fail "Duplicate sing-box Bitwarden field" -}}{{- end -}}
+  {{- $_ := set $fields .name .value -}}
+{{- end -}}
+{{- range list "UUID-8001" "UUID-8003" "UUID-8004" "UUID-8005" "SERVER" "PUBLIC_KEY" -}}
+  {{- if not (index $fields .) -}}{{- fail "Missing sing-box Bitwarden field" -}}{{- end -}}
+{{- end -}}
+{
+  "log": {
+    "level": "error",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "hosts",
+        "tag": "hosts",
+        "path": [
+          "/etc/hosts"
+        ],
+        "predefined": {
+          "account.cogdb.idic": "172.18.136.35"
+        }
+      },
+      {
+        "tag": "dns-internal",
+        "type": "udp",
+        "server": "172.16.20.11"
+      },
+      {
+        "type": "https",
+        "tag": "dns-direct",
+        "server": "223.5.5.5",
+        "server_port": 443
+      },
+      {
+        "type": "https",
+        "tag": "dns-proxy",
+        "server": "1.1.1.1",
+        "server_port": 443,
+        "detour": "res-select"
+      }
+    ],
+    "rules": [
+      {
+        "domain_suffix": [
+          "openai.com",
+          "chatgpt.com",
+          "oaistatic.com",
+          "oaiusercontent.com",
+          "anthropic.com",
+          "claude.ai",
+          "claude.com",
+          "clau.de",
+          "claudemcpclient.com",
+          "claudemcpcontent.com",
+          "claudeusercontent.com",
+          "sentry.io",
+          "statsigapi.net",
+          "intercom.io",
+          "intercomcdn.com",
+          "stripe.com",
+          "gemini.google.com",
+          "aistudio.google.com",
+          "gstatic.com",
+          "gvt2.com",
+          "gvt1.com",
+          "googleapis.com",
+          "perplexity.ai",
+          "x.ai",
+          "grok.com",
+          "groq.com",
+          "openrouter.ai",
+          "mistral.ai",
+          "mistral.com",
+          "cohere.com",
+          "huggingface.co",
+          "hf.co",
+          "cursor.com",
+          "cursor.sh",
+          "windsurf.com",
+          "codeium.com",
+          "replit.com",
+          "meta.ai",
+          "byteoversea.com"
+        ],
+        "domain": [
+          "servd-anthropic-website.b-cdn.net",
+          "anthropic.com.cdn.cloudflare.net",
+          "anthropic.auth0.com",
+          "anthropic-com.ghost.io",
+          "browser-intake-us5-datadoghq.com",
+          "cdn.usefathom.com"
+        ],
+        "domain_keyword": [
+          "datadog",
+          "sift"
+        ],
+        "rule_set": [
+          "geosite-openai",
+          "geosite-anthropic",
+          "geosite-google-gemini",
+          "geosite-github-copilot",
+          "geosite-jetbrains-ai",
+          "geosite-apple-intelligence"
+        ],
+        "action": "route",
+        "server": "dns-proxy"
+      },
+      {
+        "preferred_by": "hosts",
+        "action": "route",
+        "server": "hosts"
+      },
+      {
+        "domain_suffix": [
+          "wuya-ai.com",
+          "transwarp.io",
+          "transwarp-hub.ai"
+        ],
+        "action": "route",
+        "server": "dns-internal"
+      },
+      {
+        "rule_set": [
+          "geosite-category-ads-all"
+        ],
+        "action": "reject"
+      },
+      {
+        "rule_set": [
+          "geosite-cn"
+        ],
+        "action": "route",
+        "server": "dns-direct"
+      }
+    ],
+    "final": "dns-proxy",
+    "strategy": "ipv4_only"
+  },
+  "http_clients": [
+    {
+      "tag": "rule-set-proxy",
+      "detour": "res-select"
+    }
+  ],
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 17890
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "internal-out",
+      "domain_resolver": "dns-internal"
+    },
+    {
+      "type": "direct",
+      "tag": "direct-out",
+      "domain_resolver": "dns-direct"
+    },
+    {
+      "type": "vless",
+      "tag": "res-us-12-12-100-99-8001",
+      "server": {{ index $fields "SERVER" | toJson }},
+      "server_port": 9528,
+      "uuid": {{ index $fields "UUID-8001" | toJson }},
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.amazon.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "short_id": ""
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "res-us-9-249-28-164-8003",
+      "server": {{ index $fields "SERVER" | toJson }},
+      "server_port": 9528,
+      "uuid": {{ index $fields "UUID-8003" | toJson }},
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.amazon.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "short_id": ""
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "res-us-48-47-1-98-8004",
+      "server": {{ index $fields "SERVER" | toJson }},
+      "server_port": 9528,
+      "uuid": {{ index $fields "UUID-8004" | toJson }},
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.amazon.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "short_id": ""
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "res-us-48-47-3-96-8005",
+      "server": {{ index $fields "SERVER" | toJson }},
+      "server_port": 9528,
+      "uuid": {{ index $fields "UUID-8005" | toJson }},
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.amazon.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "short_id": ""
+        }
+      }
+    },
+    {
+      "type": "selector",
+      "tag": "res-select",
+      "outbounds": [
+        "res-us-48-47-3-96-8005",
+        "res-us-48-47-1-98-8004",
+        "res-us-12-12-100-99-8001",
+        "res-us-9-249-28-164-8003"
+      ],
+      "default": "res-us-48-47-3-96-8005"
+    }
+  ],
+  "route": {
+    "auto_detect_interface": true,
+    "default_domain_resolver": "dns-proxy",
+    "default_http_client": "rule-set-proxy",
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "domain_suffix": [
+          "openai.com",
+          "chatgpt.com",
+          "oaistatic.com",
+          "oaiusercontent.com",
+          "anthropic.com",
+          "claude.ai",
+          "claude.com",
+          "clau.de",
+          "claudemcpclient.com",
+          "claudemcpcontent.com",
+          "claudeusercontent.com",
+          "sentry.io",
+          "statsigapi.net",
+          "intercom.io",
+          "intercomcdn.com",
+          "stripe.com",
+          "gemini.google.com",
+          "aistudio.google.com",
+          "gstatic.com",
+          "gvt2.com",
+          "gvt1.com",
+          "googleapis.com",
+          "perplexity.ai",
+          "x.ai",
+          "grok.com",
+          "groq.com",
+          "openrouter.ai",
+          "mistral.ai",
+          "mistral.com",
+          "cohere.com",
+          "huggingface.co",
+          "hf.co",
+          "cursor.com",
+          "cursor.sh",
+          "windsurf.com",
+          "codeium.com",
+          "replit.com",
+          "meta.ai",
+          "byteoversea.com"
+        ],
+        "domain": [
+          "servd-anthropic-website.b-cdn.net",
+          "anthropic.com.cdn.cloudflare.net",
+          "anthropic.auth0.com",
+          "anthropic-com.ghost.io",
+          "browser-intake-us5-datadoghq.com",
+          "cdn.usefathom.com"
+        ],
+        "domain_keyword": [
+          "datadog",
+          "sift"
+        ],
+        "ip_cidr": [
+          "160.79.104.0/21",
+          "2607:6bc0::/32"
+        ],
+        "rule_set": [
+          "geosite-openai",
+          "geosite-anthropic",
+          "geosite-google-gemini",
+          "geosite-github-copilot",
+          "geosite-jetbrains-ai",
+          "geosite-apple-intelligence"
+        ],
+        "action": "route",
+        "outbound": "res-select"
+      },
+      {
+        "domain_suffix": [
+          "nvd.nist.gov",
+          "nist.gov",
+          "qq.com",
+          "qqmail.com",
+          "deepseek.com"
+        ],
+        "outbound": "direct-out"
+      },
+      {
+        "domain_suffix": [
+          "account.cogdb.idic",
+          "wuya-ai.com",
+          "transwarp.io",
+          "transwarp-hub.ai"
+        ],
+        "ip_cidr": [
+          "172.16.0.0/12",
+          "172.17.0.0/12",
+          "172.18.0.0/12"
+        ],
+        "action": "route",
+        "outbound": "internal-out"
+      },
+      {
+        "ip_is_private": true,
+        "action": "route",
+        "outbound": "internal-out"
+      },
+      {
+        "rule_set": [
+          "geosite-category-ads-all"
+        ],
+        "action": "reject"
+      },
+      {
+        "rule_set": [
+          "geosite-geolocation-!cn"
+        ],
+        "action": "route",
+        "outbound": "res-select"
+      },
+      {
+        "rule_set": [
+          "geoip-cn",
+          "geosite-cn"
+        ],
+        "action": "route",
+        "outbound": "direct-out"
+      },
+      {
+        "rule_set": [
+          "geoip-cn"
+        ],
+        "invert": true,
+        "action": "route",
+        "outbound": "res-select"
+      }
+    ],
+    "rule_set": [
+      {
+        "tag": "geosite-category-ads-all",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-category-ads-all.srs"
+      },
+      {
+        "tag": "geosite-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs"
+      },
+      {
+        "tag": "geosite-geolocation-!cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-geolocation-!cn.srs"
+      },
+      {
+        "tag": "geoip-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs"
+      },
+      {
+        "tag": "geosite-openai",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-openai.srs"
+      },
+      {
+        "tag": "geosite-anthropic",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-anthropic.srs"
+      },
+      {
+        "tag": "geosite-google-gemini",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google-gemini.srs"
+      },
+      {
+        "tag": "geosite-github-copilot",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-github-copilot.srs"
+      },
+      {
+        "tag": "geosite-jetbrains-ai",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-jetbrains-ai.srs"
+      },
+      {
+        "tag": "geosite-apple-intelligence",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-apple-intelligence.srs"
+      }
+    ],
+    "final": "res-select"
+  },
+  "experimental": {}
+}

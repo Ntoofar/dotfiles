@@ -1,0 +1,24 @@
+{{- $gitlab := bitwarden "item" "token:gitlab-pat" -}}
+{{- $gitblue := bitwarden "item" "token:gitblue-pat" -}}
+{{- if or (ne $gitlab.name "token:gitlab-pat") (ne $gitblue.name "token:gitblue-pat") -}}
+  {{- fail "Unexpected GitLab Bitwarden item" -}}
+{{- end -}}
+{{- if or (index $gitlab "deletedDate") (index $gitblue "deletedDate") -}}
+  {{- fail "GitLab Bitwarden item is deleted" -}}
+{{- end -}}
+{{- $gitlabToken := dig "login" "password" "" $gitlab -}}
+{{- $gitblueToken := dig "login" "password" "" $gitblue -}}
+{{- if or (not (kindIs "string" $gitlabToken)) (not $gitlabToken) (not (kindIs "string" $gitblueToken)) (not $gitblueToken) -}}
+  {{- fail "Missing GitLab Bitwarden login password" -}}
+{{- end -}}
+hosts:
+  gitlab.transwarp.io:
+    api_protocol: https
+    git_protocol: ssh
+    use_keyring: false
+    token: {{ $gitlabToken | toJson }}
+  gitblue.transwarp.io:
+    api_protocol: https
+    git_protocol: ssh
+    use_keyring: false
+    token: {{ $gitblueToken | toJson }}
