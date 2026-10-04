@@ -1,14 +1,3 @@
-{{- $item := bitwarden "item" "proxy:sing-box" -}}
-{{- if ne $item.name "proxy:sing-box" -}}{{- fail "Unexpected sing-box Bitwarden item" -}}{{- end -}}
-{{- if index $item "deletedDate" -}}{{- fail "Sing-box Bitwarden item is deleted" -}}{{- end -}}
-{{- $fields := dict -}}
-{{- range $item.fields -}}
-  {{- if hasKey $fields .name -}}{{- fail "Duplicate sing-box Bitwarden field" -}}{{- end -}}
-  {{- $_ := set $fields .name .value -}}
-{{- end -}}
-{{- range list "UUID-8001" "UUID-8003" "UUID-8004" "UUID-8005" "SERVER" "PUBLIC_KEY" -}}
-  {{- if not (index $fields .) -}}{{- fail "Missing sing-box Bitwarden field" -}}{{- end -}}
-{{- end -}}
 {
   "log": {
     "level": "error",
@@ -211,9 +200,9 @@
     {
       "type": "vless",
       "tag": "res-us-12-12-100-99-8001",
-      "server": {{ index $fields "SERVER" | toJson }},
+      "server": "example.invalid",
       "server_port": 9528,
-      "uuid": {{ index $fields "UUID-8001" | toJson }},
+      "uuid": "00000000-0000-4000-8000-000000000001",
       "flow": "xtls-rprx-vision",
       "tls": {
         "enabled": true,
@@ -224,7 +213,7 @@
         },
         "reality": {
           "enabled": true,
-          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "public_key": "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE",
           "short_id": ""
         }
       }
@@ -232,9 +221,9 @@
     {
       "type": "vless",
       "tag": "res-us-9-249-28-164-8003",
-      "server": {{ index $fields "SERVER" | toJson }},
+      "server": "example.invalid",
       "server_port": 9528,
-      "uuid": {{ index $fields "UUID-8003" | toJson }},
+      "uuid": "00000000-0000-4000-8000-000000000001",
       "flow": "xtls-rprx-vision",
       "tls": {
         "enabled": true,
@@ -245,7 +234,7 @@
         },
         "reality": {
           "enabled": true,
-          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "public_key": "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE",
           "short_id": ""
         }
       }
@@ -253,9 +242,9 @@
     {
       "type": "vless",
       "tag": "res-us-48-47-1-98-8004",
-      "server": {{ index $fields "SERVER" | toJson }},
+      "server": "example.invalid",
       "server_port": 9528,
-      "uuid": {{ index $fields "UUID-8004" | toJson }},
+      "uuid": "00000000-0000-4000-8000-000000000001",
       "flow": "xtls-rprx-vision",
       "tls": {
         "enabled": true,
@@ -266,7 +255,7 @@
         },
         "reality": {
           "enabled": true,
-          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "public_key": "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE",
           "short_id": ""
         }
       }
@@ -274,9 +263,9 @@
     {
       "type": "vless",
       "tag": "res-us-48-47-3-96-8005",
-      "server": {{ index $fields "SERVER" | toJson }},
+      "server": "example.invalid",
       "server_port": 9528,
-      "uuid": {{ index $fields "UUID-8005" | toJson }},
+      "uuid": "00000000-0000-4000-8000-000000000001",
       "flow": "xtls-rprx-vision",
       "tls": {
         "enabled": true,
@@ -287,7 +276,7 @@
         },
         "reality": {
           "enabled": true,
-          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "public_key": "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE",
           "short_id": ""
         }
       }

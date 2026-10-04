@@ -8,6 +8,32 @@ system-wide files under `/etc` do not belong here.
 
 ## Install on a new machine
 
+### Through knowl
+
+When this repository is knowl's `dotfiles/` submodule, run from the knowl root:
+
+```sh
+bash toolkits/env.sh setup
+bash toolkits/env.sh apply --secrets  # Optional credential rendering
+```
+
+`setup --secrets` combines both steps. For daily changes use
+`bash toolkits/env.sh diff` and `bash toolkits/env.sh apply`. These commands
+apply from the submodule, not the independent default chezmoi clone.
+System links are a separate optional `bash toolkits/env.sh links` command
+requiring sudo; they are not part of dotfiles apply.
+For a fresh Ubuntu/Arch systemd or Gentoo OpenRC service, run
+`bash toolkits/env.sh service-setup` from knowl after rendering secrets. It installs
+without starting/enabling, and refuses existing installations. Activate explicitly
+with `bash toolkits/env.sh service-update`; use the same update command after a
+reviewed upgrade. No sudo/restart postinstall hook is added to mise configuration.
+Knowl's secret apply validates a private scratch copy without privileged runtime
+log/dashboard paths. Standalone native checks below may need root access because
+the preserved runtime profile uses `/var/log` and `/var/lib`; applying alone
+does not provision those paths or a service. See knowl's service setup guides.
+
+### Standalone chezmoi
+
 Install `chezmoi`, then initialize and bootstrap without rendering secrets:
 
 ```sh
@@ -15,7 +41,7 @@ chezmoi init git@github.com:Ntoofar/dotfiles.git
 chezmoi diff --skip-secrets
 chezmoi apply --skip-secrets
 export PATH="$HOME/.local/bin:$PATH"
-mise exec -- bw login
+mise exec -- bw login --quiet
 export BW_SESSION="$(mise exec -- bw unlock --raw)"
 mise exec -- bw sync
 mise exec -- chezmoi apply ~/.config/sing-box ~/.config/glab-cli
@@ -38,6 +64,10 @@ values are written to the machine-local chezmoi configuration, not committed
 to this repository.
 
 ## Daily use
+
+The following commands use chezmoi's default source. When editing another
+checkout, explicitly select it with `chezmoi --source "$PWD"` from that checkout
+or use knowl's workflow above.
 
 ```sh
 chezmoi edit ~/.bashrc
@@ -232,7 +262,7 @@ TLS settings directly; keep UUID/server/public-key template expressions.
 Use native `sing-box check` to validate the rendered configuration before running.
 Review source changes before applying; never add passwords or tokens to Git.
 Clash/mihomo migration was reverted. The original configuration remains in
-`knowl/environment/clash/conf`, with `environment/init.sh` linking it to
+`knowl/proxy/clash/conf`, with `toolkits/env.sh links` linking it to
 `/etc/clash`. Dotfiles no longer manages its binary, configuration, or launcher.
 The retired sing-box ciphertext is backed up locally at
 `~/.local/state/proxy-client/migration-backup/sing-box.json.age`; it contains old
@@ -257,11 +287,18 @@ proxy on                      # in another shell, while the engine is running
 ```
 
 There is no custom launcher or renderer. Sing-box reads the chezmoi-generated
-JSON directly; logs go to stderr, not a privileged `/var/log` file.
+JSON directly; file logging is preserved at `/var/log/sing-box.log`.
 Any caches, downloaded providers, logs, and rendered secrets must stay outside Git.
-Initial proxy port is `127.0.0.1:17890`; TUN, redirection, LAN exposure, and controller APIs
-are disabled. Sing-box DNS/routing are in the JSON template.
-This profile does not migrate VPN/TUN behavior or server deployments.
+The template preserves knowl's `proxy/sing-box/config-v1.14.0.json`, including
+its JSONC comments and formatting. Only active credential values become
+Bitwarden expressions. Its runtime settings include TUN
+`utun9527` with automatic/strict routing and route exclusions, the mixed
+listener at `127.0.0.1:17890`, and the Clash API/dashboard at `0.0.0.0:9529`.
+It requires privileges for TUN, `/var/log/sing-box.log`, and dashboard state
+under `/var/lib/sing-box/dashboard`; unprivileged foreground runs may fail.
+The API has no configured authentication secret and is not localhost-only:
+restrict access with host/network policy. Applying does not activate any of this.
+DNS, routing, and server deployment ownership remain unchanged.
 Validation checks syntax/engine compatibility, not live upstream connectivity.
 
 To edit sing-box configuration:

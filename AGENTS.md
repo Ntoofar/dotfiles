@@ -37,8 +37,16 @@ chezmoi --source "$PWD" apply --skip-secrets
 ```
 
 Apply mutates the real home and can download/install tools; it is not a routine
-test. When used under knowl, its environment scripts provide setup and daily
-apply workflows. Do not start services or run sudo as part of ordinary apply.
+test. When used under knowl, `toolkits/env.sh` provides `setup`, `diff`, and
+`apply [--secrets]` from the knowl root. Its optional `links` subcommand is
+separate and privileged, not part of dotfiles apply. Do not start services or
+run sudo as part of ordinary apply. Keep standalone chezmoi workflows supported;
+do not add a dependency on knowl's script to this repository.
+Do not add sudo/service restarts to mise postinstall hooks. On configured systemd/OpenRC
+hosts, knowl's explicit `service-update` command handles validation/activation
+after the upgrade has completed; ordinary install/apply stays portable.
+Its separate `service-setup` installs a fresh service without starting/enabling;
+neither privileged command belongs in dotfiles apply or install hooks.
 
 ## Mise tools
 
@@ -63,6 +71,9 @@ dependency lifecycle scripts merely to validate a documentation/source change.
   Item `proxy:sing-box` supplies fields `UUID-8001`, `UUID-8003`, `UUID-8004`,
   `UUID-8005`, `SERVER`, and `PUBLIC_KEY`. Validate schema compatibility whenever
   its mise pin or template changes together.
+  Preserve the reference profile's JSONC comments and formatting during
+  migration; replace credential literals only. Test both parsed settings and
+  complete mock-rendered text against the sanitized JSONC fixture.
 - Glab source: `dot_config/private_glab-cli/private_config.yml.tmpl`.
   Items `token:gitlab-pat` and `token:gitblue-pat` supply `login.password` for
   `gitlab.transwarp.io` and `gitblue.transwarp.io`. Keep per-host tokens separate;
@@ -99,6 +110,7 @@ The template tests render/apply into temporary directories with mock vault data;
 sing-box tests also call the installed engine. They require Node, standalone
 chezmoi, and (for native validation) mise/sing-box. If tools are missing, report
 the limitation instead of installing dependencies or unlocking the live vault.
+Ensure Node is on PATH: mock Bitwarden fixtures use an env-based Node shebang.
 Do not pass unrendered `.tmpl` hook files to shell syntax checks; render with
 nonsecret/mock inputs first if testing the templated hook.
 
