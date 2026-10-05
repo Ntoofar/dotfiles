@@ -51,7 +51,7 @@ unset BW_SESSION
 ```
 
 Applying installs the pinned standalone `mise` binary and the configured Go,
-Node.js, uv, VS Code, Claude Code, Codex, and Antigravity CLI versions from
+Node.js, uv, glab, kubectl, kind, Helm, VS Code, Claude Code, Codex, and Antigravity CLI versions from
 upstream archives or official npm packages. It never
 uses `apt-get`, `pacman`, or `emerge`. The host must already provide `curl`, Git,
 CA certificates, and common archive utilities.
@@ -106,6 +106,31 @@ and ARM64 Linux hosts; it is not expected to work on a musl-based Gentoo host.
 VS Code versions are discovered from Microsoft's stable-release API, so update
 it with `mise upgrade http:vscode`. After changing tool versions manually,
 refresh the lockfile with `mise lock --global --platform linux-x64`.
+
+### Kubernetes tools
+
+Mise manages pinned `kubectl`, `kind`, and `helm` through its built-in Aqua
+backends, downloading upstream binaries without apt/pacman/emerge or an Aqua CLI.
+Keep kubectl compatible with your API server (normally within one minor version);
+the shared client pin may not suit older clusters. Helm is pinned to major version
+4: review chart/plugin compatibility before use. Kind additionally requires a
+working supported container runtime such as Docker or Podman, not installed here.
+Kubeconfigs, cluster credentials, Helm repositories/plugins, and container state
+remain machine-local and are not managed by these tool entries.
+The old `/opt/manual/k8s/bin` PATH entry and `K8S_HOME` export are retired;
+existing manual binaries are not deleted.
+
+References: [mise Aqua backend](https://mise.jdx.dev/dev-tools/backends/aqua.html),
+[kubectl version skew](https://kubernetes.io/releases/version-skew-policy/),
+[kind prerequisites](https://kind.sigs.k8s.io/docs/user/quick-start/).
+
+```sh
+kubectl version --client
+kind version
+helm version --short
+# Deliberate upgrades; persist config/lock changes back into this checkout.
+mise upgrade kubectl kind helm --bump
+```
 
 ## AI command-line tools
 
@@ -219,8 +244,18 @@ is 0600. Native chezmoi Bitwarden calls read `login.password` from:
 Both hosts use HTTPS API access and SSH Git transport. Each host has its own
 token; no global token is written to shell startup files. The template deliberately
 uses file-backed credentials (`use_keyring: false`), not an OS keyring.
-Glab itself is not currently managed by the mise config; install it before using
-the glab commands below.
+Mise installs the pinned glab release binary through `gitlab:gitlab-org/cli`;
+no distro package manager is needed. Installation does not log in or overwrite
+the two-host credential configuration. Upgrade deliberately with
+`mise upgrade glab --bump`, then persist the config/lock changes in dotfiles.
+With the pinned mise 2026.9.17, its generated glab lock entry records the version
+and backend only, not a Linux artifact URL/checksum. The release asset is resolved
+during installation; this is not the same checksum-lock coverage as the Aqua tools.
+The public-tools install hook clears inherited `GITLAB_TOKEN`/`MISE_GITLAB_TOKEN`
+in its own subprocess. Otherwise a self-hosted PAT can be sent to GitLab.com's
+public release API and cause a 401. Parent-shell variables and per-host glab
+configuration are unchanged. For manual public glab installation, use
+`env -u GITLAB_TOKEN -u MISE_GITLAB_TOKEN mise install glab`.
 
 ```sh
 export BW_SESSION="$(mise exec -- bw unlock --raw)"

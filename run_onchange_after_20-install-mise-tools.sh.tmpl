@@ -8,4 +8,10 @@ set -eu
 mise_bin="$HOME/.local/bin/mise"
 [ -x "$mise_bin" ] || exit 0
 
-"$mise_bin" install
+# This shared inventory downloads public releases. A self-hosted GitLab PAT
+# exported in the shell is not valid on gitlab.com and must not be sent there.
+# Scope this to the installer: do not change the parent shell or glab config.
+(
+    unset GITLAB_TOKEN MISE_GITLAB_TOKEN
+    "$mise_bin" install
+)

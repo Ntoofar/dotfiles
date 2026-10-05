@@ -43,9 +43,5 @@ wechat() {
     _launch_gui /opt/manual/WeChatLinux_x86_64.AppImage
 }
 
-zd() {
-    _launch_gui /opt/manual/zed.app/bin/zed
-}
-
 ccs() { _launch_gui cc-switch; }
 wem() { _launch_gui wemeet; }

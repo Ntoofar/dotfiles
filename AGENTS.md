@@ -103,6 +103,7 @@ Read the relevant tests first. From this repository's root:
 sh -n run_onchange_before_10-install-mise.sh
 mise exec -- node tests/sing-box-template.test.cjs
 mise exec -- node tests/glab-config.test.cjs
+mise exec -- node tests/mise-install-hook.test.cjs
 git diff --check
 ```
 
@@ -111,6 +112,9 @@ sing-box tests also call the installed engine. They require Node, standalone
 chezmoi, and (for native validation) mise/sing-box. If tools are missing, report
 the limitation instead of installing dependencies or unlocking the live vault.
 Ensure Node is on PATH: mock Bitwarden fixtures use an env-based Node shebang.
+The install-hook test renders with nonsecret inputs and fake mise/tokens; verify
+that inherited GitLab tokens are absent only in the public installer subprocess,
+parent-shell state stays intact, and installer failures propagate.
 Do not pass unrendered `.tmpl` hook files to shell syntax checks; render with
 nonsecret/mock inputs first if testing the templated hook.
 
