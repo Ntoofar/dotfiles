@@ -62,8 +62,8 @@ try {
     .replace(JSON.stringify(rendered.log.output), JSON.stringify(validationConfig.log.output))
     .replace(JSON.stringify(rendered.experimental.clash_api.external_ui), JSON.stringify(validationConfig.experimental.clash_api.external_ui));
   fs.writeFileSync(checkConfigPath, checkText, {mode:0o600});
-  const checked = spawnSync(process.env.MISE_BIN || path.join(os.homedir(), '.local/bin/mise'),
-    ['exec', '--', 'sing-box', 'check', '-c', checkConfigPath], {encoding:'utf8', timeout:15000});
+  const checked = spawnSync(process.env.SING_BOX_BIN || '/opt/manual/sing-box/sing-box',
+    ['check', '-c', checkConfigPath], {encoding:'utf8', timeout:15000});
   assert.equal(checked.status, 0, 'native sing-box validation failed (output suppressed)');
   console.log('Native Bitwarden template and sing-box validation passed (mock values only).');
 } finally { fs.rmSync(dir, {recursive:true, force:true}); }

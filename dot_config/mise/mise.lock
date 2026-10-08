@@ -2,17 +2,6 @@
 
 lockfile_version = 3
 
-[[tools."github:sagernet/sing-box"]]
-version = "1.14.2"
-backend = "github:sagernet/sing-box"
-specifiers = ["1.14.2"]
-
-[tools."github:sagernet/sing-box"."platforms.linux-x64"]
-checksum = "sha256:5c7bc18461827b28d0e5ee7e89d33b276d3ff7c818531104c8e8d26d85b0656e"
-url = "https://github.com/SagerNet/sing-box/releases/download/v1.14.2/sing-box-1.14.2-linux-amd64-glibc.tar.gz"
-url_api = "https://api.github.com/repos/SagerNet/sing-box/releases/assets/585840737"
-provenance = "github-attestations"
-
 [[tools.glab]]
 version = "1.120.0"
 backend = "gitlab:gitlab-org/cli"
@@ -52,19 +41,6 @@ url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.2.16-
 [tools."http:antigravity"."platforms.linux-x64"]
 checksum = "sha512:c31f09265d4f6aef7c03b5105661ae98f9a8365c6c812c68adcc4a5e1f8b8f96c05fd2e4408a52f5e87e1b561ac350f4ffa7ad41a191893be7a3730ccf9d6553"
 url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.2.16-5594158052802560/linux-x64/cli_linux_x64.tar.gz"
-
-[[tools."http:vscode"]]
-version = "1.140.0"
-backend = "http:vscode"
-specifiers = ["latest"]
-
-[tools."http:vscode".options]
-format = "tar.gz"
-strip_components = "1"
-
-[tools."http:vscode"."platforms.linux-x64"]
-checksum = "sha256:d32031e9e213d59532af3cf32fcb8b357a1cdd10417967b4f5b5ba30436dc0dc"
-url = "https://update.code.visualstudio.com/1.140.0/linux-x64/stable"
 
 [[tools.kind]]
 version = "0.33.0"

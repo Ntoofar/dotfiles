@@ -45,13 +45,13 @@ mise exec -- bw login --quiet
 export BW_SESSION="$(mise exec -- bw unlock --raw)"
 mise exec -- bw sync
 mise exec -- chezmoi apply ~/.config/sing-box ~/.config/glab-cli
-mise exec -- sing-box check -c ~/.config/sing-box/config.json
+/opt/manual/sing-box/sing-box check -c ~/.config/sing-box/config.json
 mise exec -- bw lock
 unset BW_SESSION
 ```
 
 Applying installs the pinned standalone `mise` binary and the configured Go,
-Node.js, uv, glab, kubectl, kind, Helm, VS Code, Claude Code, Codex, and Antigravity CLI versions from
+Node.js, uv, glab, kubectl, kind, Helm, Claude Code, Codex, and Antigravity CLI versions from
 upstream archives or official npm packages. It never
 uses `apt-get`, `pacman`, or `emerge`. The host must already provide `curl`, Git,
 CA certificates, and common archive utilities.
@@ -101,11 +101,11 @@ files can override the global versions. The committed `mise.lock` records the
 resolved Linux x86-64 artifacts and checksums.
 
 Ubuntu, Gentoo, and Arch use the same configuration because mise downloads the
-user-level upstream artifacts. The VS Code archive supports glibc-based x86-64
-and ARM64 Linux hosts; it is not expected to work on a musl-based Gentoo host.
-VS Code versions are discovered from Microsoft's stable-release API, so update
-it with `mise upgrade http:vscode`. After changing tool versions manually,
-refresh the lockfile with `mise lock --global --platform linux-x64`.
+managed user tools from upstream. Sing-box and VS Code are installed manually:
+`/opt/manual/sing-box/sing-box` and `/opt/manual/VSCode-linux-x64/bin/code`.
+The shell adds the manual VS Code CLI directory to PATH when present.
+After changing managed tool versions, refresh the lockfile with
+`mise lock --global --platform linux-x64`.
 
 ### Kubernetes tools
 
@@ -226,8 +226,8 @@ re-add the rendered home config to chezmoi; edit the source template instead.
 export BW_SESSION="$(bw unlock --raw)"
 bw sync
 mise exec -- chezmoi apply ~/.config/sing-box
-mise exec -- sing-box check -c ~/.config/sing-box/config.json
-# mise exec -- sing-box run -c ~/.config/sing-box/config.json
+/opt/manual/sing-box/sing-box check -c ~/.config/sing-box/config.json
+# /opt/manual/sing-box/sing-box run -c ~/.config/sing-box/config.json
 bw lock
 unset BW_SESSION
 ```
@@ -284,10 +284,9 @@ Reference: https://docs.gitlab.com/cli/authentication/
 
 ## Workstation proxies
 
-mise installs pinned sing-box directly
-from upstream. Upgrade the proxy pins deliberately and validate their config
-schemas before using a new version. Ubuntu, Gentoo, and Arch need no distro
-package-manager commands. Age is no longer installed or managed: no active
+Sing-box is installed manually at `/opt/manual/sing-box/sing-box`.
+Choose upgrades deliberately and validate config compatibility before activation.
+Age is no longer installed or managed: no active
 configuration uses it. The old encrypted rollback backups and identity are
 preserved; temporarily reinstall age only if you need to recover those backups.
 
@@ -316,8 +315,8 @@ Keep the existing age identity securely backed up only if you need to recover
 retired encrypted snapshots. No proxy starts on apply.
 
 ```sh
-mise exec -- sing-box check -c ~/.config/sing-box/config.json
-mise exec -- sing-box run -c ~/.config/sing-box/config.json
+/opt/manual/sing-box/sing-box check -c ~/.config/sing-box/config.json
+/opt/manual/sing-box/sing-box run -c ~/.config/sing-box/config.json
 proxy on                      # in another shell, while the engine is running
 ```
 
@@ -343,7 +342,7 @@ chezmoi edit ~/.config/sing-box/config.json
 export BW_SESSION="$(bw unlock --raw)"
 bw sync
 mise exec -- chezmoi apply ~/.config/sing-box
-mise exec -- sing-box check -c ~/.config/sing-box/config.json
+/opt/manual/sing-box/sing-box check -c ~/.config/sing-box/config.json
 bw lock
 unset BW_SESSION
 ```

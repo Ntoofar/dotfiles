@@ -1,6 +1,7 @@
 min_version = "2026.9.17"
 
 [tools]
+# Sing-box and VS Code are installed manually under /opt/manual.
 go = "1.27.1"
 node = "26.10.0"
 uv = "0.12.22"
@@ -10,8 +11,6 @@ glab = "1.120.0"
 kubectl = "1.37.1"
 kind = "0.33.0"
 helm = "4.3.0"
-# Proxy config schemas can change: upgrade these pins deliberately, then validate.
-"github:sagernet/sing-box" = "1.14.2"
 # Claude's postinstall links the platform-native binary into its CLI launcher.
 "npm:@anthropic-ai/claude-code" = { version = "latest", allow_builds = ["@anthropic-ai/claude-code"] }
 "npm:@openai/codex" = "latest"
@@ -28,17 +27,6 @@ checksum_url = 'https://antigravity-cli-auto-updater-974169037036.us-central1.ru
 checksum_expr = 'fromJSON(body).url == url ? "sha512:" + fromJSON(body).sha512 : ""'
 format = "tar.gz"
 rename_exe = "agy"
-
-[tools."http:vscode"]
-version = "latest"
-version_list_url = "https://update.code.visualstudio.com/api/update/linux-{{ arch() }}/stable/latest"
-version_json_path = ".productVersion"
-url = "https://update.code.visualstudio.com/{{ version }}/linux-{{ arch() }}/stable"
-checksum_url = "https://update.code.visualstudio.com/api/update/linux-{{ arch() }}/stable/latest"
-checksum_expr = '"sha256:" + fromJSON(body).sha256hash'
-format = "tar.gz"
-strip_components = 1
-bin_path = "bin"
 
 [env]
 _.path = ["{{env.HOME}}/.go/bin"]

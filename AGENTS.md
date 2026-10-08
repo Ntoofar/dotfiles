@@ -45,6 +45,8 @@ do not add a dependency on knowl's script to this repository.
 Do not add sudo/service restarts to mise postinstall hooks. On configured systemd/OpenRC
 hosts, knowl's explicit `service-update` command handles validation/activation
 after the upgrade has completed; ordinary install/apply stays portable.
+Sing-box and VS Code are manual installations under `/opt/manual`, excluded
+from mise config/locks. Sing-box config remains a chezmoi/Bitwarden template.
 Its separate `service-setup` installs a fresh service without starting/enabling;
 neither privileged command belongs in dotfiles apply or install hooks.
 
@@ -70,7 +72,7 @@ dependency lifecycle scripts merely to validate a documentation/source change.
 - Sing-box source: `dot_config/private_sing-box/private_config.json.tmpl`.
   Item `proxy:sing-box` supplies fields `UUID-8001`, `UUID-8003`, `UUID-8004`,
   `UUID-8005`, `SERVER`, and `PUBLIC_KEY`. Validate schema compatibility whenever
-  its mise pin or template changes together.
+  the manual executable version or template changes.
   Preserve the reference profile's JSONC comments and formatting during
   migration; replace credential literals only. Test both parsed settings and
   complete mock-rendered text against the sanitized JSONC fixture.
@@ -109,7 +111,7 @@ git diff --check
 
 The template tests render/apply into temporary directories with mock vault data;
 sing-box tests also call the installed engine. They require Node, standalone
-chezmoi, and (for native validation) mise/sing-box. If tools are missing, report
+chezmoi, and (for native validation) `/opt/manual/sing-box/sing-box`. If tools are missing, report
 the limitation instead of installing dependencies or unlocking the live vault.
 Ensure Node is on PATH: mock Bitwarden fixtures use an env-based Node shebang.
 The install-hook test renders with nonsecret inputs and fake mise/tokens; verify
