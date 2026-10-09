@@ -51,8 +51,9 @@ unset BW_SESSION
 ```
 
 Applying installs the pinned standalone `mise` binary and the configured Go,
-Node.js, uv, glab, kubectl, kind, Helm, Claude Code, Codex, and Antigravity CLI versions from
-upstream archives or official npm packages. It never
+Node.js, uv, glab, kubectl, kind, Helm, and Antigravity CLI versions from
+upstream archives. Node's bundled npm installs Claude Code, Codex, and the pinned
+Bitwarden CLI into `~/.local/share/npm`. It never
 uses `apt-get`, `pacman`, or `emerge`. The host must already provide `curl`, Git,
 CA certificates, and common archive utilities.
 The first `--skip-secrets` apply installs tools without needing a vault session.
@@ -134,29 +135,40 @@ mise upgrade kubectl kind helm --bump
 
 ## AI command-line tools
 
-- `claude`: `npm:@anthropic-ai/claude-code`
-- `codex`: `npm:@openai/codex`
-- `agy`: `http:antigravity`, downloaded from Google's official release manifest
+Mise manages Node and Antigravity. Node's bundled npm manages Claude Code, Codex,
+and Bitwarden CLI. `~/.npmrc` sets the global prefix to
+`~/.local/share/npm`, so CLI installations survive Node upgrades.
+The shell and mise environment include its `bin` directory. Mise's npm shim is
+disabled so `npm` is the Node installation's own npm executable.
 
-These tools use `latest` selectors, with resolved versions recorded in the
-lockfile. Antigravity displays the standard release version in mise. The managed
-`~/.local/bin/mise-antigravity-url` resolver keeps Google's build ID in the
-archive URL, reading the global lockfile first and the official manifest for
-new releases. If an unlocked older version is no longer in the manifest, it
-fails instead of installing a different release under that version. The Linux archive
-configuration supports glibc x86-64 and ARM64 hosts, not musl hosts.
-Claude Code and Antigravity self-updates are disabled so mise owns upgrades.
-Authentication, tokens, sessions, and each CLI's local settings are unmanaged.
-Run each CLI interactively after installation to sign in.
+The install hook bootstraps these npm globals without accessing the vault.
+Only Claude's required install script is allowed; dependency scripts for other
+packages remain unapproved. Claude self-updates remain disabled: update with npm.
+Authentication, sessions, and each CLI's local settings remain unmanaged.
+
+To upgrade Claude and Codex:
 
 ```sh
-mise upgrade 'npm:@anthropic-ai/claude-code' 'npm:@openai/codex' http:antigravity
-mise lock --global --platform linux-x64
+npm install -g @anthropic-ai/claude-code@latest @openai/codex@latest
+claude --version
+codex --version
 ```
 
-After upgrading, copy the global config/lockfile back into the chezmoi source
-with `chezmoi add ~/.config/mise/config.toml ~/.config/mise/mise.lock`, then
-commit them in the dotfiles repository.
+No mise/npm dependency lockfiles or chezmoi add step are needed for those updates.
+To upgrade Antigravity separately:
+
+```sh
+mise upgrade --no-prune http:antigravity
+```
+
+Antigravity uses Google's official release manifest and the managed
+`mise-antigravity-url` helper for the artifact build ID. Its resolved version,
+URL, and checksum remain in mise.lock. The resolver reads the lockfile first,
+then the official manifest for new releases; it refuses unavailable older
+versions rather than substituting another release. The configured archives
+support glibc Linux x86-64 and ARM64, not musl. Antigravity self-updates remain
+disabled so mise owns its upgrades. Review and persist its lockfile change in
+`knowl/dotfiles` separately. Sing-box and VS Code remain manual installations.
 
 Intentionally not migrated from the old environment repository:
 
@@ -167,10 +179,10 @@ Intentionally not migrated from the old environment repository:
 
 ## Credential management
 
-Bitwarden CLI (`bw`) is installed by mise from `npm:@bitwarden/cli`, with an
-explicit version pin and a committed dependency lockfile. Dependency lifecycle
-scripts are not approved. Review release/security notes before upgrading this
-credential-handling tool; do not automatically follow `latest`.
+Bitwarden CLI (`bw`) is installed with Node's npm. Its reviewed version,
+`2026.9.1`, is pinned in the install hook; it is excluded from general AI CLI
+upgrades. Review releases before changing that pin and installing a new version.
+Global npm dependency lockfiles are not committed.
 
 The vault database, exports, master password, API credentials, and `BW_SESSION`
 are machine-local and must never be added to chezmoi, Git, or shell startup
@@ -305,8 +317,9 @@ credentials and still requires the original age identity. It is not managed by G
 On a new machine, bootstrap with `chezmoi apply --skip-secrets` to install mise
 and Bitwarden CLI, then login/unlock before applying the sing-box template
 (template evaluation happens before install hooks).
-Use `mise exec -- chezmoi apply ~/.config/sing-box` so chezmoi can find mise-managed
-`bw` and create the directory and config together. On a new machine, do not target
+Use `mise exec -- chezmoi apply ~/.config/sing-box` so chezmoi can find the
+npm-installed `bw` with mise's Node and create the directory and config together.
+On a new machine, do not target
 `~/.config/sing-box/config.json` before its parent exists: chezmoi fails with a
 missing-directory error. Directory-targeted apply sets mode 0700 on the directory
 and mode 0600 on the generated config.

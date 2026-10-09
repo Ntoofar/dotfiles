@@ -1,9 +1,10 @@
 #!/bin/sh
 set -eu
 
-# Re-run this script whenever the managed mise tool configuration changes.
+# Re-run whenever the mise configuration, lockfile, npm settings, or script changes.
 # config-sha256: {{ include "dot_config/mise/config.toml" | sha256sum }}
 # lock-sha256: {{ include "dot_config/mise/mise.lock" | sha256sum }}
+# npmrc-sha256: {{ include "dot_npmrc" | sha256sum }}
 
 mise_bin="$HOME/.local/bin/mise"
 [ -x "$mise_bin" ] || exit 0
@@ -14,4 +15,9 @@ mise_bin="$HOME/.local/bin/mise"
 (
     unset GITLAB_TOKEN MISE_GITLAB_TOKEN
     "$mise_bin" install
+    # Use the bundled npm; global tools survive Node upgrades via this prefix.
+    # Bitwarden is credential tooling: review before changing its explicit pin.
+    "$mise_bin" exec -- npm install --global --prefix "$HOME/.local/share/npm" \
+        --allow-scripts=@anthropic-ai/claude-code --fund=false --audit=false \
+        @anthropic-ai/claude-code@latest @openai/codex@latest @bitwarden/cli@2026.9.1
 )

@@ -1,7 +1,0 @@
-{
-  "name": "mise-npm-install",
-  "private": true,
-  "dependencies": {
-    "@bitwarden/cli": "2026.9.1"
-  }
-}

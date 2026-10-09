@@ -27,7 +27,7 @@ knowl's gitlink separately.
 - Keep chezmoi standalone. Install hooks bootstrap pinned standalone mise before
   installing its configured tools; neither hook should unlock the vault.
 - Bootstrapping must use `--skip-secrets`: template evaluation occurs before
-  install hooks can provide mise-managed Bitwarden CLI.
+  install hooks can provide npm-installed Bitwarden CLI.
 
 For an explicitly requested apply from this checkout, run from its root:
 
@@ -52,11 +52,13 @@ neither privileged command belongs in dotfiles apply or install hooks.
 
 ## Mise tools
 
-`dot_config/mise/config.toml`, `mise.lock`, and the `locks/` directory are the
-managed tool configuration and resolved artifacts/dependencies. Keep version
-selectors, lockfiles, resolver helpers, and version-sensitive templates aligned.
+`dot_config/mise/config.toml` and `mise.lock` manage Node and native tools.
+Claude Code, Codex, and Bitwarden CLI are npm globals under `~/.local/share/npm`,
+installed by Node's bundled npm. Keep `node.npm_shim = false`.
+`dot_npmrc` supplies the prefix and allows only Claude's required install script.
+Keep version selectors, lockfiles, resolver helpers, and version-sensitive templates aligned.
 Review credential-handling Bitwarden CLI upgrades deliberately; retain its
-explicit version pin rather than silently switching to `latest`.
+explicit install-hook version pin rather than silently switching to `latest`.
 
 Support Ubuntu, Gentoo, and Arch through upstream archives/official packages,
 not apt-get, pacman, or emerge for managed tools. Document required host utilities

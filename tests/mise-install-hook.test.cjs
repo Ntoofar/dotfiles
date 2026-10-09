@@ -23,13 +23,22 @@ try {
   const fake=path.join(home,'.local/bin/mise');
   fs.writeFileSync(fake,`#!/bin/sh
 set -eu
-[ "$1" = install ] && [ "$#" = 1 ]
 [ -z "\${GITLAB_TOKEN+x}" ] && [ -z "\${MISE_GITLAB_TOKEN+x}" ]
-printf 'public-install\\n' >> "$TEST_LOG"
-exit "$TEST_EXIT"
+case "$1" in
+ install)
+  [ "$#" = 1 ]
+  printf 'public-install\\n' >> "$TEST_LOG"
+  [ "$TEST_EXIT" != 41 ] || exit 41 ;;
+ exec)
+  shift 2
+  [ "$*" = "npm install --global --prefix $HOME/.local/share/npm --allow-scripts=@anthropic-ai/claude-code --fund=false --audit=false @anthropic-ai/claude-code@latest @openai/codex@latest @bitwarden/cli@2026.9.1" ] || exit 91
+  printf 'npm-global-install\\n' >> "$TEST_LOG"
+  [ "$TEST_EXIT" != 42 ] || exit 42 ;;
+ *) exit 92 ;;
+esac
 `,{mode:0o755});
   const log=path.join(dir,'calls');
-  for(const code of ['0','41']) {
+  for(const code of ['0','41','42']) {
     const r=spawnSync('/bin/sh',['-c',
       'sh "$1"; result=$?; [ "$GITLAB_TOKEN" = FAKE_PRIVATE_PAT ] && [ "$MISE_GITLAB_TOKEN" = FAKE_MISE_PAT ] || exit 90; exit "$result"',
       'test',hook],{encoding:'utf8',env:{...process.env,HOME:home,
@@ -37,9 +46,9 @@ exit "$TEST_EXIT"
     assert.equal(r.status,Number(code),'installer status/parent environment must be preserved');
     assert.ok(!r.stdout.includes('FAKE_PRIVATE_PAT')&&!r.stderr.includes('FAKE_MISE_PAT'));
   }
-  assert.equal(fs.readFileSync(log,'utf8'),'public-install\npublic-install\n');
+  assert.equal(fs.readFileSync(log,'utf8'),'public-install\nnpm-global-install\npublic-install\npublic-install\nnpm-global-install\n');
   fs.unlinkSync(fake);
   const missing=spawnSync('/bin/sh',[hook],{env:{...process.env,HOME:home}});
   assert.equal(missing.status,0,'missing mise remains a no-op');
-  console.log('Mise hook tests passed (token isolation, parent preservation, failure propagation).');
+  console.log('Mise hook tests passed (mise/npm installers, Bitwarden pin, token isolation, failure propagation).');
 } finally {fs.rmSync(dir,{recursive:true,force:true});}

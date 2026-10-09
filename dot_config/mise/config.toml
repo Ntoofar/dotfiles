@@ -11,11 +11,7 @@ glab = "1.120.0"
 kubectl = "1.37.1"
 kind = "0.33.0"
 helm = "4.3.0"
-# Claude's postinstall links the platform-native binary into its CLI launcher.
-"npm:@anthropic-ai/claude-code" = { version = "latest", allow_builds = ["@anthropic-ai/claude-code"] }
-"npm:@openai/codex" = "latest"
-# Credential tooling: review releases and bump this pin explicitly.
-"npm:@bitwarden/cli" = "2026.9.1"
+# npm packages are installed with Node's npm into ~/.local/share/npm.
 
 # Resolve Google's opaque artifact build ID separately from the release version.
 [tools."http:antigravity"]
@@ -29,13 +25,14 @@ format = "tar.gz"
 rename_exe = "agy"
 
 [env]
-_.path = ["{{env.HOME}}/.go/bin"]
+_.path = ["{{env.HOME}}/.local/share/npm/bin", "{{env.HOME}}/.go/bin"]
 GOPATH = "{{env.HOME}}/.go"
 GOPROXY = "https://goproxy.cn,direct"
 UV_DEFAULT_INDEX = "https://mirrors.aliyun.com/pypi/simple/"
-# mise owns upgrades; prevent the CLIs from replacing managed binaries.
+# npm owns Claude upgrades; mise owns Antigravity upgrades.
 DISABLE_AUTOUPDATER = "1"
 AGY_CLI_DISABLE_AUTO_UPDATE = "true"
 
 [settings]
 lockfile = true
+node.npm_shim = false
