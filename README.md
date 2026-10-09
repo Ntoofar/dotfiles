@@ -108,6 +108,19 @@ The shell adds the manual VS Code CLI directory to PATH when present.
 After changing managed tool versions, refresh the lockfile with
 `mise lock --global --platform linux-x64`.
 
+When this repository is knowl's submodule, save home version changes from the
+knowl root with one command:
+
+```sh
+bash toolkits/env.sh mise-save
+git -C dotfiles diff -- dot_config/mise/
+```
+
+This saves the entire global config and lockfile, including local edits, into
+`knowl/dotfiles`. It does not apply settings, upgrade tools, or commit.
+For a standalone checkout, use `chezmoi --source "$PWD" add
+~/.config/mise/config.toml ~/.config/mise/mise.lock` from its root.
+
 ### Kubernetes tools
 
 Mise manages pinned `kubectl`, `kind`, and `helm` through its built-in Aqua
