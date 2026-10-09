@@ -42,6 +42,9 @@ try {
   const baseline = parse(baselineText);
   assert.deepEqual(rendered, baseline, 'preserve the v1.14.0 profile with mock vault values');
   assert.equal(rendered.log.output, '/var/log/sing-box.log');
+  const tun = rendered.inbounds.find(x => x.type === 'tun');
+  assert.equal(tun.auto_route, true, 'auto_redirect requires auto_route');
+  assert.equal(tun.auto_redirect, true, 'enable Linux TUN auto redirect');
   assert.equal(rendered.outbounds.filter(x => x.type === 'vless').length, 4);
   for (const x of rendered.outbounds.filter(x => x.type === 'vless')) {
     assert.equal(x.uuid, '00000000-0000-4000-8000-000000000001');
