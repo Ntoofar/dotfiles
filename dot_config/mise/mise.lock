@@ -2,6 +2,21 @@
 
 lockfile_version = 3
 
+[[tools.fzf]]
+version = "0.74.5"
+backend = "aqua:junegunn/fzf"
+specifiers = ["0.74.5"]
+
+[tools.fzf."platforms.linux-arm64"]
+checksum = "sha256:cf058001da21724a469b714a29cf4aab9cbe860d218a0d6c1b5b661efad7784c"
+url = "https://github.com/junegunn/fzf/releases/download/v0.74.5/fzf-0.74.5-linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/junegunn/fzf/releases/assets/629581759"
+
+[tools.fzf."platforms.linux-x64"]
+checksum = "sha256:d47d7f882972c7d674dbbba998ffa4116e68379616ffac7695d0671e9a722c5f"
+url = "https://github.com/junegunn/fzf/releases/download/v0.74.5/fzf-0.74.5-linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/junegunn/fzf/releases/assets/629581740"
+
 [[tools.glab]]
 version = "1.122.0"
 backend = "gitlab:gitlab-org/cli"
@@ -44,7 +59,7 @@ checksum = "sha256:86584a54def73570558f66f5111cc53dfed56689637ae32c1201205d494f5
 url = "https://get.helm.sh/helm-v4.3.0-linux-amd64.tar.gz"
 
 [[tools."http:antigravity"]]
-version = "1.3.3"
+version = "1.3.4"
 backend = "http:antigravity"
 specifiers = ["latest"]
 
@@ -53,12 +68,12 @@ format = "tar.gz"
 rename_exe = "agy"
 
 [tools."http:antigravity"."platforms.linux-arm64"]
-checksum = "sha512:1bfd3503576219a102176c13579665a2f39e84ac86a904b117d3b33f3dd751f194a862496bad6ffe914ad46d2c877ba12b6c07e6db07128b706d238262fe430c"
-url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.3.3-5524738307653632/linux-arm/cli_linux_arm64.tar.gz"
+checksum = "sha512:24a1d463319701f4943b2d4932cb86ca34d60d2e9fedcd9018ca31809773d719f272512068911632db175d7233088551033bcecc0a2a56b1bcfa041269687eaf"
+url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.3.4-5524158944247808/linux-arm/cli_linux_arm64.tar.gz"
 
 [tools."http:antigravity"."platforms.linux-x64"]
-checksum = "blake3:cf131abe37a6016addb38012792231bbe90bd1ebd5260ddb6dad190ae7a1ed1f"
-url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.3.3-5524738307653632/linux-x64/cli_linux_x64.tar.gz"
+checksum = "blake3:e9dcf5a254c7536be350de92e0e89251e2f1dc8c1fa2011c425029bec1d6f62e"
+url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.3.4-5524158944247808/linux-x64/cli_linux_x64.tar.gz"
 
 [[tools.kind]]
 version = "0.33.0"
@@ -100,6 +115,21 @@ url = "https://nodejs.org/dist/v26.11.1/node-v26.11.1-linux-arm64.tar.gz"
 [tools.node."platforms.linux-x64"]
 checksum = "sha256:15fc043a51a5783f2f4b634561091658f5a7f0e3db03f997dca3a8033a33e45b"
 url = "https://nodejs.org/dist/v26.11.1/node-v26.11.1-linux-x64.tar.gz"
+
+[[tools.tssh]]
+version = "0.1.26"
+backend = "aqua:trzsz/trzsz-ssh"
+specifiers = ["0.1.26"]
+
+[tools.tssh."platforms.linux-arm64"]
+checksum = "sha256:aa87c3022096b1ac6f583e1af04675419ec777ec3336a34d353efce73b75a0a9"
+url = "https://github.com/trzsz/trzsz-ssh/releases/download/v0.1.26/tssh_0.1.26_linux_aarch64.tar.gz"
+url_api = "https://api.github.com/repos/trzsz/trzsz-ssh/releases/assets/489891253"
+
+[tools.tssh."platforms.linux-x64"]
+checksum = "sha256:e01cfacb5fef97b4eb2b5521ad2c9c27ec4892088ae75d329bcef9e290723301"
+url = "https://github.com/trzsz/trzsz-ssh/releases/download/v0.1.26/tssh_0.1.26_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/trzsz/trzsz-ssh/releases/assets/489891254"
 
 [[tools.uv]]
 version = "0.13.0"
