@@ -58,6 +58,21 @@ url = "https://get.helm.sh/helm-v4.3.0-linux-arm64.tar.gz"
 checksum = "sha256:86584a54def73570558f66f5111cc53dfed56689637ae32c1201205d494f54fb"
 url = "https://get.helm.sh/helm-v4.3.0-linux-amd64.tar.gz"
 
+[[tools.herdr]]
+version = "0.9.4"
+backend = "aqua:herdrdev/herdr"
+specifiers = ["0.9.4"]
+
+[tools.herdr."platforms.linux-arm64"]
+checksum = "sha256:9511cb70982c1ef115f232058e7ed7cf9640aa5a2c0ca78934cefda3aeb093fd"
+url = "https://github.com/herdrdev/herdr/releases/download/v0.9.4/herdr-linux-aarch64"
+url_api = "https://api.github.com/repos/herdrdev/herdr/releases/assets/637474390"
+
+[tools.herdr."platforms.linux-x64"]
+checksum = "sha256:493304fbefb0ed0ea0455f373b47f48d24e8774bc7974f4c916ad2e937675b23"
+url = "https://github.com/herdrdev/herdr/releases/download/v0.9.4/herdr-linux-x86_64"
+url_api = "https://api.github.com/repos/herdrdev/herdr/releases/assets/637474400"
+
 [[tools."http:antigravity"]]
 version = "1.3.5"
 backend = "http:antigravity"
