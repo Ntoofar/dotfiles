@@ -15,11 +15,6 @@ alias kdgc='kind get clusters'
 alias kddcs='kind delete clusters'
 
 alias ssk='sshkube'
-alias kc='sshkube'
-alias kcu='sshkube use'
-alias kcls='sshkube ls'
-alias kcup='sshkube up'
-alias kcdn='sshkube down'
 
 alias dbx='buildx-harbor'
 alias dbxon='buildx-harbor on'
