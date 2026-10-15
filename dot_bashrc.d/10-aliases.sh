@@ -14,6 +14,7 @@ alias kdcc='kind create cluster'
 alias kdgc='kind get clusters'
 alias kddcs='kind delete clusters'
 
+alias ssk='sshkube'
 alias kc='sshkube'
 alias kcu='sshkube use'
 alias kcls='sshkube ls'
