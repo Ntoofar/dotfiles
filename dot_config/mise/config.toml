@@ -3,10 +3,10 @@ min_version = "2026.9.17"
 [tools]
 # Sing-box and VS Code are installed manually under /opt/manual.
 go = "1.27.2"
-node = "26.11.1"
-uv = "0.13.0"
+node = "26.12.0"
+uv = "0.13.1"
 # GitLab CLI release binary (gitlab:gitlab-org/cli backend).
-glab = "1.122.0"
+glab = "1.123.0"
 # Kubernetes clients: pin deliberately for cluster/chart compatibility.
 kubectl = "1.37.1"
 kind = "0.33.0"
