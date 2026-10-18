@@ -1,0 +1,60 @@
+{{- $item := bitwarden "item" "proxy:sing-box" -}}
+{{- if ne $item.name "proxy:sing-box" -}}{{- fail "Unexpected sing-box Bitwarden item" -}}{{- end -}}
+{{- if index $item "deletedDate" -}}{{- fail "Sing-box Bitwarden item is deleted" -}}{{- end -}}
+{{- $fields := dict -}}
+{{- range $item.fields -}}
+  {{- if hasKey $fields .name -}}{{- fail "Duplicate sing-box Bitwarden field" -}}{{- end -}}
+  {{- $_ := set $fields .name .value -}}
+{{- end -}}
+{{- $missing := list -}}
+{{- range list "UUID-8001" "UUID-8003" "UUID-8004" "UUID-8005" "PRIVATE_KEY" -}}
+  {{- if not (index $fields .) -}}{{- $missing = append $missing . -}}{{- end -}}
+{{- end -}}
+{{- if $missing -}}{{- fail (printf "Missing or empty custom fields in Bitwarden item proxy:sing-box: %s. Populate them in Bitwarden, then rerun apply --secrets." (join ", " $missing)) -}}{{- end -}}
+{
+  "inbounds": [
+    {
+      "tag": "VLESS-REALITY-9528",
+      "type": "vless",
+      "listen": "::",
+      "listen_port": 9528,
+      "users": [
+        {
+          "name": "res-us-12-12-100-99-8001",
+          "flow": "xtls-rprx-vision",
+          "uuid": {{ index $fields "UUID-8001" | toJson }}
+        },
+        {
+          "name": "res-us-9-249-28-164-8003",
+          "flow": "xtls-rprx-vision",
+          "uuid": {{ index $fields "UUID-8003" | toJson }}
+        },
+        {
+          "name": "res-us-48-47-1-98-8004",
+          "flow": "xtls-rprx-vision",
+          "uuid": {{ index $fields "UUID-8004" | toJson }}
+        },
+        {
+          "name": "res-us-48-47-3-96-8005",
+          "flow": "xtls-rprx-vision",
+          "uuid": {{ index $fields "UUID-8005" | toJson }}
+        }
+      ],
+      "tls": {
+        "enabled": true,
+        "server_name": "www.amazon.com",
+        "reality": {
+          "enabled": true,
+          "handshake": {
+            "server": "www.amazon.com",
+            "server_port": 443
+          },
+          "private_key": {{ index $fields "PRIVATE_KEY" | toJson }},
+          "short_id": [
+            ""
+          ]
+        }
+      }
+    }
+  ]
+}
