@@ -1,0 +1,110 @@
+{{- $item := bitwarden "item" "oxylabs:residential-ip" -}}
+{{- if ne $item.name "oxylabs:residential-ip" -}}{{- fail "Unexpected Oxylabs Bitwarden item" -}}{{- end -}}
+{{- if index $item "deletedDate" -}}{{- fail "Oxylabs Bitwarden item is deleted" -}}{{- end -}}
+{{- $server := "" -}}
+{{- $serverSeen := false -}}
+{{- range $item.fields -}}
+  {{- if eq .name "SERVER" -}}
+    {{- if $serverSeen -}}{{- fail "Duplicate SERVER custom field in Bitwarden item oxylabs:residential-ip" -}}{{- end -}}
+    {{- $serverSeen = true -}}
+    {{- $server = .value -}}
+  {{- end -}}
+{{- end -}}
+{{- if or (not (kindIs "string" $server)) (not $server) -}}{{- fail "Missing or empty SERVER custom field in Bitwarden item oxylabs:residential-ip" -}}{{- end -}}
+{{- $username := dig "login" "username" "" $item -}}
+{{- $password := dig "login" "password" "" $item -}}
+{{- if or (not (kindIs "string" $username)) (not $username) -}}{{- fail "Missing or empty login.username in Bitwarden item oxylabs:residential-ip" -}}{{- end -}}
+{{- if or (not (kindIs "string" $password)) (not $password) -}}{{- fail "Missing or empty login.password in Bitwarden item oxylabs:residential-ip" -}}{{- end -}}
+{
+  "log": {
+    "output": "/var/log/sing-box/access.log",
+    "level": "info",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns",
+        "type": "h3",
+        "server": "cloudflare-dns.com",
+        "domain_resolver": "local"
+      },
+      {
+        "tag": "local",
+        "type": "local"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "tag": "res-8001",
+      "type": "socks",
+      "server": {{ $server | toJson }},
+      "server_port": 8001,
+      "username": {{ $username | toJson }},
+      "password": {{ $password | toJson }}
+    },
+    {
+      "tag": "res-8003",
+      "type": "socks",
+      "server": {{ $server | toJson }},
+      "server_port": 8003,
+      "username": {{ $username | toJson }},
+      "password": {{ $password | toJson }}
+    },
+    {
+      "tag": "res-8004",
+      "type": "socks",
+      "server": {{ $server | toJson }},
+      "server_port": 8004,
+      "username": {{ $username | toJson }},
+      "password": {{ $password | toJson }}
+    },
+    {
+      "tag": "res-8005",
+      "type": "socks",
+      "server": {{ $server | toJson }},
+      "server_port": 8005,
+      "username": {{ $username | toJson }},
+      "password": {{ $password | toJson }}
+    },
+    {
+      "tag": "direct",
+      "type": "direct"
+    }
+  ],
+  "route": {
+    "default_domain_resolver": "dns",
+    "rules": [
+      {
+      "domain_suffix": [
+        "stripe.com",
+        "stripe.network"
+      ],
+      "action": "route",
+      "outbound": "direct"
+      },
+      {
+        "auth_user": ["res-us-12-12-100-99-8001"],
+        "action": "route",
+        "outbound": "res-8001"
+      },
+      {
+        "auth_user": ["res-us-9-249-28-164-8003"],
+        "action": "route",
+        "outbound": "res-8003"
+      },
+      {
+        "auth_user": ["res-us-48-47-1-98-8004"],
+        "action": "route",
+        "outbound": "res-8004"
+      },
+      {
+        "auth_user": ["res-us-48-47-3-96-8005"],
+        "action": "route",
+        "outbound": "res-8005"
+      }
+    ],
+    "final": "res-8005"
+  }
+}

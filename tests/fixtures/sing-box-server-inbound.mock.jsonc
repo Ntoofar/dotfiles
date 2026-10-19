@@ -1,0 +1,47 @@
+{
+  "inbounds": [
+    {
+      "tag": "VLESS-REALITY-9528",
+      "type": "vless",
+      "listen": "::",
+      "listen_port": 9528,
+      "users": [
+        {
+          "name": "res-us-12-12-100-99-8001",
+          "flow": "xtls-rprx-vision",
+          "uuid": "00000000-0000-4000-8000-000000000001"
+        },
+        {
+          "name": "res-us-9-249-28-164-8003",
+          "flow": "xtls-rprx-vision",
+          "uuid": "00000000-0000-4000-8000-000000000002"
+        },
+        {
+          "name": "res-us-48-47-1-98-8004",
+          "flow": "xtls-rprx-vision",
+          "uuid": "00000000-0000-4000-8000-000000000003"
+        },
+        {
+          "name": "res-us-48-47-3-96-8005",
+          "flow": "xtls-rprx-vision",
+          "uuid": "00000000-0000-4000-8000-000000000004"
+        }
+      ],
+      "tls": {
+        "enabled": true,
+        "server_name": "www.amazon.com",
+        "reality": {
+          "enabled": true,
+          "handshake": {
+            "server": "www.amazon.com",
+            "server_port": 443
+          },
+          "private_key": "AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI",
+          "short_id": [
+            ""
+          ]
+        }
+      }
+    }
+  ]
+}

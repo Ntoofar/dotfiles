@@ -78,6 +78,14 @@ dependency lifecycle scripts merely to validate a documentation/source change.
   Preserve the reference profile's JSONC comments and formatting during
   migration; replace credential literals only. Test both parsed settings and
   complete mock-rendered text against the sanitized JSONC fixture.
+  Server sources live in `dot_config/private_sing-box/private_server/` and render
+  under `~/.config/sing-box/server`. They share the UUID fields and also require
+  the existing `PRIVATE_KEY` for REALITY. Do not invent additional vault fields.
+  The base server template reads custom field `SERVER` and the shared
+  `login.username`/`login.password` from `oxylabs:residential-ip` for all four
+  SOCKS outbounds. Keep ports unchanged and JSON-escape all three values.
+  Preserve both server files' formatting and routing;
+  check `config.json` with `conf/*.json` together. No service/deployment action.
 - Glab source: `dot_config/private_glab-cli/private_config.yml.tmpl`.
   Items `token:gitlab-pat` and `token:gitblue-pat` supply `login.password` for
   `gitlab.transwarp.io` and `gitblue.transwarp.io`. Keep per-host tokens separate;
@@ -106,6 +114,7 @@ Read the relevant tests first. From this repository's root:
 ```sh
 sh -n run_onchange_before_10-install-mise.sh
 mise exec -- node tests/sing-box-template.test.cjs
+mise exec -- node tests/sing-box-server-template.test.cjs
 mise exec -- node tests/glab-config.test.cjs
 mise exec -- node tests/mise-install-hook.test.cjs
 git diff --check

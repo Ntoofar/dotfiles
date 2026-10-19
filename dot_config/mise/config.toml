@@ -10,10 +10,10 @@ glab = "1.123.0"
 # Kubernetes clients: pin deliberately for cluster/chart compatibility.
 kubectl = "1.37.1"
 kind = "0.33.0"
-helm = "4.3.0"
+helm = "4.3.1"
 tssh = "0.1.26"
 fzf = "0.74.5"
-herdr = "0.9.4"
+herdr = "0.9.5"
 # npm packages are installed with Node's npm into ~/.local/share/npm.
 
 # Resolve Google's opaque artifact build ID separately from the release version.

@@ -15,6 +15,12 @@ cache.db
 # Never commit the rendered sing-box configuration.
 dot_config/private_sing-box/*
 !dot_config/private_sing-box/private_config.json.tmpl
+!dot_config/private_sing-box/private_server/
+dot_config/private_sing-box/private_server/*
+!dot_config/private_sing-box/private_server/private_config.json.tmpl
+!dot_config/private_sing-box/private_server/private_conf/
+dot_config/private_sing-box/private_server/private_conf/*
+!dot_config/private_sing-box/private_server/private_conf/private_VLESS-REALITY-9528.json.tmpl
 # Only the token-free glab template belongs in Git.
 dot_config/private_glab-cli/*
 !dot_config/private_glab-cli/private_config.yml.tmpl

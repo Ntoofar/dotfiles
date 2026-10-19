@@ -239,8 +239,8 @@ credential helper is managed here; Git authentication remains machine-local.
   port changes; engine validation does not prove remote connectivity.
 
 `chezmoi apply` now needs an unlocked Bitwarden session to render sing-box.
-The generated `~/.config/sing-box/config.json` contains plaintext secrets
-and is mode 0600. Missing/duplicate custom fields fail. Sing-box uses this
+The generated `~/.config/sing-box/config.json` and server files below contain plaintext
+secrets and are mode 0600. Missing/duplicate custom fields fail. Sing-box uses this
 already-rendered file and does not access the vault. Rotate/update vault values,
 then apply again to refresh them.
 IMPORTANT: `chezmoi diff`, `cat`, `execute-template`, and dry-run output can
@@ -256,6 +256,54 @@ mise exec -- chezmoi apply ~/.config/sing-box
 bw lock
 unset BW_SESSION
 ```
+
+### Sing-box server
+
+The source directory `dot_config/private_sing-box/private_server/` renders to
+`~/.config/sing-box/server/`, containing `config.json` and
+`conf/VLESS-REALITY-9528.json`. Both directories are private (0700), and both
+files are private (0600). The templates preserve the original server profile's
+settings and formatting while resolving credentials from `proxy:sing-box`.
+
+The inbound shares the existing four `UUID-8001`, `UUID-8003`, `UUID-8004`, and
+`UUID-8005` fields with the client. It uses the existing `PRIVATE_KEY` for the
+REALITY private key corresponding to the client's `PUBLIC_KEY`.
+The base server template reads the shared SOCKS credentials from the existing
+`oxylabs:residential-ip` item's custom field `SERVER`, `login.username`, and
+`login.password`. These values are used by all four outbounds (ports 8001, 8003,
+8004, and 8005); ports remain unchanged. The Oxylabs `SERVER` is separate from
+the client endpoint `SERVER` in `proxy:sing-box`. No per-port SOCKS custom fields
+or import command are needed. Missing/empty/nonstring host or login values,
+duplicate `SERVER` custom fields, and wrong/deleted items fail
+rendering before any credentials are output. Values are JSON-escaped.
+The inbound fields must exist and be nonempty. Item identity/deletion and
+duplicate-field guards match the client template; all values use JSON escaping.
+
+With a locally unlocked vault, `chezmoi apply ~/.config/sing-box/server` renders
+only the server tree. `--skip-secrets` skips its credential-bearing files.
+Knowl's `bash toolkits/env.sh apply --secrets` renders both sing-box profiles and
+glab, then validates the client and combined server configuration in private
+scratch copies. Apply reads credentials from the vault; it does not write them
+back to Bitwarden.
+Neither apply starts services or deploys files remotely; knowl's service commands
+still use only the client profile.
+
+Validate the rendered server with the manually installed compatible engine:
+
+```sh
+/opt/manual/sing-box/sing-box check \
+  -c ~/.config/sing-box/server/config.json \
+  -C ~/.config/sing-box/server/conf
+```
+
+This direct check uses `/var/log/sing-box/access.log`, so it may need suitable
+filesystem permissions. Keep diagnostics local/private. Checks do not prove key
+pair correspondence or remote connectivity. Never add rendered files back to
+chezmoi or Git.
+
+Run `mise exec -- node tests/sing-box-server-template.test.cjs` from this checkout
+for isolated tests with mock Bitwarden data, private target permissions, exact
+profile parity, failure cases, and native combined-profile validation.
 
 ## Two GitLab hosts (glab)
 
