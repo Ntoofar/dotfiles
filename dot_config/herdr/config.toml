@@ -2,3 +2,9 @@ onboarding = false
 
 [keys]
 prefix = "ctrl+space"
+
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", "agent", "state_text"],
+  ["workspace", "tab", "pane"],
+]
