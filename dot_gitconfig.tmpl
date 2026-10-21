@@ -7,6 +7,13 @@
     di = diff
     usg = reset HEAD --
     tree = log --graph --decorate --pretty=oneline --abbrev-commit
+    wt = worktree
+    wta = worktree add
+    wtl = worktree list
+    wtr = worktree remove
+    wtp = worktree prune
+    # create and checkout to same name worktree
+    wtc = "!f() { git worktree add -b \"$1\" \"../$1\" "$2"; }; f"
 [user]
     name = {{ .name | quote }}
     email = {{ .email | quote }}
