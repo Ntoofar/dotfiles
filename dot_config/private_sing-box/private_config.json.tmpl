@@ -9,6 +9,19 @@
 {{- range list "UUID-8001" "UUID-8003" "UUID-8004" "UUID-8005" "SERVER" "PUBLIC_KEY" -}}
   {{- if not (index $fields .) -}}{{- fail "Missing sing-box Bitwarden field" -}}{{- end -}}
 {{- end -}}
+{{- $yiyonex := bitwarden "item" "proxy:yiyonex" -}}
+{{- if ne $yiyonex.name "proxy:yiyonex" -}}{{- fail "Unexpected Yiyonex Bitwarden item" -}}{{- end -}}
+{{- if index $yiyonex "deletedDate" -}}{{- fail "Yiyonex Bitwarden item is deleted" -}}{{- end -}}
+{{- $yiyonexPassword := "" -}}
+{{- $yiyonexPasswordSeen := false -}}
+{{- range (index $yiyonex "fields") -}}
+  {{- if eq .name "PASSWORD" -}}
+    {{- if $yiyonexPasswordSeen -}}{{- fail "Duplicate PASSWORD custom field in Bitwarden item proxy:yiyonex" -}}{{- end -}}
+    {{- $yiyonexPasswordSeen = true -}}
+    {{- $yiyonexPassword = .value -}}
+  {{- end -}}
+{{- end -}}
+{{- if or (not (kindIs "string" $yiyonexPassword)) (not $yiyonexPassword) -}}{{- fail "Missing or empty PASSWORD custom field in Bitwarden item proxy:yiyonex" -}}{{- end -}}
 {
   "log": {
     "level": "error",
@@ -45,6 +58,52 @@
         "server": "1.1.1.1",
         "server_port": 443,
         "detour": "res-select"
+      },
+      {
+        "type": "udp",
+        "tag": "dns-yiyonex-bootstrap",
+        "server": "119.29.29.29",
+        "server_port": 53
+      },
+      {
+        "type": "https",
+        "tag": "dns-yiyonex",
+        "server": "cdn1.nexolinkapi.com",
+        "server_port": 25985,
+        "path": "/0x3f",
+        "domain_resolver": {
+          "server": "dns-yiyonex-bootstrap",
+          "strategy": "ipv4_only"
+        }
+      },
+      {
+        "type": "https",
+        "tag": "dns-yiyonex-2",
+        "server": "cdn2.nexolinkapi.com",
+        "server_port": 443,
+        "path": "/0x3f",
+        "domain_resolver": {
+          "server": "dns-yiyonex-bootstrap",
+          "strategy": "ipv4_only"
+        }
+      },
+      {
+        "type": "https",
+        "tag": "dns-yiyonex-3",
+        "server": "cdnhost.nexolinkapi.com",
+        "server_port": 25985,
+        "path": "/0x3f",
+        "domain_resolver": {
+          "server": "dns-yiyonex-bootstrap",
+          "strategy": "ipv4_only"
+        }
+      },
+      {
+        "type": "https",
+        "tag": "dns-yiyonex-4",
+        "server": "118.128.63.250",
+        "server_port": 443,
+        "path": "/0x3f"
       }
     ],
     "rules": [
@@ -226,8 +285,15 @@
         "reality": {
           "enabled": true,
           "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
-          "short_id": ""
+          "short_id": "29fc1d3f0f709971"
         }
+      },
+      "multiplex": {
+        "enabled": true,
+        "protocol": "smux",
+        "max_connections": 4,
+        "min_streams": 4,
+        "padding": true
       }
     },
     {
@@ -247,8 +313,15 @@
         "reality": {
           "enabled": true,
           "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
-          "short_id": ""
+          "short_id": "29fc1d3f0f709971"
         }
+      },
+      "multiplex": {
+        "enabled": true,
+        "protocol": "smux",
+        "max_connections": 4,
+        "min_streams": 4,
+        "padding": true
       }
     },
     {
@@ -268,8 +341,15 @@
         "reality": {
           "enabled": true,
           "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
-          "short_id": ""
+          "short_id": "29fc1d3f0f709971"
         }
+      },
+      "multiplex": {
+        "enabled": true,
+        "protocol": "smux",
+        "max_connections": 4,
+        "min_streams": 4,
+        "padding": true
       }
     },
     {
@@ -289,7 +369,56 @@
         "reality": {
           "enabled": true,
           "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
-          "short_id": ""
+          "short_id": "29fc1d3f0f709971"
+        }
+      },
+      "multiplex": {
+        "enabled": true,
+        "protocol": "smux",
+        "max_connections": 4,
+        "min_streams": 4,
+        "padding": true
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "relay-48-47-3-96-8005",
+      "server": {{ index $fields "SERVER" | toJson }},
+      "server_port": 19528,
+      "uuid": {{ index $fields "UUID-8005" | toJson }},
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.amazon.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "short_id": "29fc1d3f0f709971"
+        }
+      },
+      "detour": "R6-5"
+    },
+    {
+      "type": "trojan",
+      "tag": "R6-5",
+      "server": "cs2s.yiyonex.com",
+      "server_port": 34563,
+      "password": {{ $yiyonexPassword | toJson }},
+      "domain_resolver": {
+        "server": "dns-yiyonex",
+        "strategy": "ipv4_only"
+      },
+      "tls": {
+        "enabled": true,
+        "server_name": "mpvideo.qpic.cn",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
         }
       }
     },
@@ -297,12 +426,17 @@
       "type": "selector",
       "tag": "res-select",
       "outbounds": [
-        "res-us-48-47-3-96-8005",
-        "res-us-48-47-1-98-8004",
-        "res-us-12-12-100-99-8001",
-        "res-us-9-249-28-164-8003"
+        "relay-48-47-3-96-8005"
       ],
-      "default": "res-us-48-47-3-96-8005"
+      "default": "relay-48-47-3-96-8005"
+      // "default": "R6-5"
+      // "outbounds": [
+      //   "res-us-48-47-3-96-8005",
+      //   "res-us-48-47-1-98-8004",
+      //   "res-us-12-12-100-99-8001",
+      //   "res-us-9-249-28-164-8003"
+      // ],
+      // "default": "res-us-48-47-3-96-8005"
     }
   ],
 

@@ -237,6 +237,8 @@ credential helper is managed here; Git authentication remains machine-local.
   REALITY VLESS outbounds. Existing ports, TLS server names, and routing remain
   unchanged. A changed server/key can require corresponding TLS server-name or
   port changes; engine validation does not prove remote connectivity.
+- `proxy:yiyonex`: the `PASSWORD` custom field supplies the R6-5 Trojan outbound
+  password. Missing, empty, nonstring, or duplicate `PASSWORD` fields fail rendering.
 
 `chezmoi apply` now needs an unlocked Bitwarden session to render sing-box.
 The generated `~/.config/sing-box/config.json` and server files below contain plaintext

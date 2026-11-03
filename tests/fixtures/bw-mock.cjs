@@ -1,7 +1,21 @@
 #!/usr/bin/env node
 // Fabricated data only. Never contacts a real vault.
 const [command, type, name, extra] = process.argv.slice(2);
-if (command !== 'get' || type !== 'item' || extra || !['proxy:sing-box', 'oxylabs:residential-ip'].includes(name)) process.exit(1);
+if (command !== 'get' || type !== 'item' || extra || !['proxy:sing-box', 'proxy:yiyonex', 'oxylabs:residential-ip'].includes(name)) process.exit(1);
+if (name === 'proxy:yiyonex') {
+  const item = {name, fields:[{name:'PASSWORD', value:'mock-yiyonex-password'}]};
+  const testCase = (process.env.MOCK_BW_CASE || '').replace(/^yiyonex-/, '');
+  if (testCase === 'escape') item.fields[0].value = 'pass"\\word\n';
+  if (testCase === 'missing') item.fields = [];
+  if (testCase === 'empty') item.fields[0].value = '';
+  if (testCase === 'invalid') item.fields[0].value = 42;
+  if (testCase === 'duplicate') item.fields.push({...item.fields[0]});
+  if (testCase === 'no-fields') delete item.fields;
+  if (testCase === 'wrong') item.name = 'wrong-item';
+  if (testCase === 'deleted') item.deletedDate = '2026-01-01';
+  console.log(JSON.stringify(item));
+  process.exit(0);
+}
 if (name === 'oxylabs:residential-ip') {
   const item = {name, fields:[{name:'SERVER', value:'socks.example.invalid'}],
     login:{username:'mock-oxylabs-username', password:'mock-oxylabs-password'}};
