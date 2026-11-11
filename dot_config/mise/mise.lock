@@ -3,34 +3,34 @@
 lockfile_version = 3
 
 [[tools.fzf]]
-version = "0.74.5"
+version = "0.75.0"
 backend = "aqua:junegunn/fzf"
-specifiers = ["0.74.5"]
+specifiers = ["0.75.0"]
 
 [tools.fzf."platforms.linux-arm64"]
-checksum = "sha256:cf058001da21724a469b714a29cf4aab9cbe860d218a0d6c1b5b661efad7784c"
-url = "https://github.com/junegunn/fzf/releases/download/v0.74.5/fzf-0.74.5-linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/junegunn/fzf/releases/assets/629581759"
+checksum = "sha256:bd0717badb6a5620387e014bb94209aac4d9eab6ab77b5348eabb0833aeb4d59"
+url = "https://github.com/junegunn/fzf/releases/download/v0.75.0/fzf-0.75.0-linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/junegunn/fzf/releases/assets/720590838"
 
 [tools.fzf."platforms.linux-x64"]
-checksum = "sha256:d47d7f882972c7d674dbbba998ffa4116e68379616ffac7695d0671e9a722c5f"
-url = "https://github.com/junegunn/fzf/releases/download/v0.74.5/fzf-0.74.5-linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/junegunn/fzf/releases/assets/629581740"
+checksum = "sha256:0d6640f83582d991cf429754baad64b07e3a4e439a6019670f4b91da1314141c"
+url = "https://github.com/junegunn/fzf/releases/download/v0.75.0/fzf-0.75.0-linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/junegunn/fzf/releases/assets/720590794"
 
 [[tools.glab]]
-version = "1.126.0"
+version = "1.129.0"
 backend = "gitlab:gitlab-org/cli"
-specifiers = ["1.126.0"]
+specifiers = ["1.129.0"]
 
 [tools.glab."platforms.linux-arm64"]
-checksum = "sha256:de5e92c9c8b306eeebb19daa854d48101b78328850e7b9cd677ecd6f98cd4391"
-url = "https://gitlab.com/gitlab-org/cli/-/releases/v1.126.0/downloads/glab_1.126.0_linux_arm64.tar.gz"
-url_api = "https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/packages/generic/glab/1%2E126%2E0/glab_1%2E126%2E0_linux_arm64%2Etar%2Egz"
+checksum = "sha256:bf3561a5830199bd3a3bcebd9d29f9f5d8b557133088028d18f2d2768c0a2a92"
+url = "https://gitlab.com/gitlab-org/cli/-/releases/v1.129.0/downloads/glab_1.129.0_linux_arm64.tar.gz"
+url_api = "https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/packages/generic/glab/1%2E129%2E0/glab_1%2E129%2E0_linux_arm64%2Etar%2Egz"
 
 [tools.glab."platforms.linux-x64"]
-checksum = "sha256:f386519ba83e9482979992ee7f60eeebee4d95b950f95f4fe7289e0a1b1ea74c"
-url = "https://gitlab.com/gitlab-org/cli/-/releases/v1.126.0/downloads/glab_1.126.0_linux_amd64.tar.gz"
-url_api = "https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/packages/generic/glab/1%2E126%2E0/glab_1%2E126%2E0_linux_amd64%2Etar%2Egz"
+checksum = "sha256:d05b25deef16d1149a0e519dd83e6288d3ec151ec154901b41c68fb2ac5b8267"
+url = "https://gitlab.com/gitlab-org/cli/-/releases/v1.129.0/downloads/glab_1.129.0_linux_amd64.tar.gz"
+url_api = "https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/packages/generic/glab/1%2E129%2E0/glab_1%2E129%2E0_linux_amd64%2Etar%2Egz"
 
 [[tools.go]]
 version = "1.27.3"
@@ -74,7 +74,7 @@ url = "https://github.com/herdrdev/herdr/releases/download/v0.9.5/herdr-linux-x8
 url_api = "https://api.github.com/repos/herdrdev/herdr/releases/assets/640898235"
 
 [[tools."http:agy"]]
-version = "1.5.3"
+version = "1.5.5"
 backend = "http:agy"
 specifiers = ["latest"]
 
@@ -83,12 +83,12 @@ format = "tar.gz"
 rename_exe = "agy"
 
 [tools."http:agy"."platforms.linux-arm64"]
-checksum = "sha512:c2fac818b3c1bb224079df03a714ccba99728b6a3a41d86d247ab2feb8582a43840c5032f1c2b75e72667623d5503e7ffda2712c4f37b6ee19f99c3fcfb25bae"
-url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.3-6604829099950080/linux-arm/cli_linux_arm64.tar.gz"
+checksum = "sha512:eb3e025c125c1c60a1493a0c1d9cdf15e8372277d6d3b015e8d29e1bd095344eece5cbc2447f238148bd259d5f2daa0f75641adc0ac02b5fad57edc4ed842d59"
+url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.5-6740358537805824/linux-arm/cli_linux_arm64.tar.gz"
 
 [tools."http:agy"."platforms.linux-x64"]
-checksum = "blake3:dd369320df5a633eb311f90921c302f1c892325a8048a3097b7a6d41e72473ee"
-url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.3-6604829099950080/linux-x64/cli_linux_x64.tar.gz"
+checksum = "blake3:acf53b3e0ef080fa6982a2943c77c58425b1e83d08db9daad4761cb1ca52d8bd"
+url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.5-6740358537805824/linux-x64/cli_linux_x64.tar.gz"
 
 [[tools."http:antigravity"]]
 version = "1.4.2"
@@ -164,18 +164,18 @@ url = "https://github.com/trzsz/trzsz-ssh/releases/download/v0.1.27/tssh_0.1.27_
 url_api = "https://api.github.com/repos/trzsz/trzsz-ssh/releases/assets/673717041"
 
 [[tools.uv]]
-version = "0.13.6"
+version = "0.13.7"
 backend = "aqua:astral-sh/uv"
-specifiers = ["0.13.6"]
+specifiers = ["0.13.7"]
 
 [tools.uv."platforms.linux-arm64"]
-checksum = "sha256:229e194255c7958d86d56e8790d969a6f74736592133f0dfd0076f754c642c1d"
-url = "https://github.com/astral-sh/uv/releases/download/0.13.6/uv-aarch64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/679980412"
+checksum = "sha256:71279f8d3c67241e807b9d8db872d1bf541579fb9f08b7d1eb1682196d1e57dc"
+url = "https://github.com/astral-sh/uv/releases/download/0.13.7/uv-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/704009469"
 provenance = "github-attestations"
 
 [tools.uv."platforms.linux-x64"]
-checksum = "sha256:f29c3e94ffabd7e6f3ba521dba169a9b7ec12100bf3257087f0f24f6123f3645"
-url = "https://github.com/astral-sh/uv/releases/download/0.13.6/uv-x86_64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/679980644"
+checksum = "sha256:c5221ff41b7892bfc223543883600125f6a47fe845093e0f5bdff4f359196d83"
+url = "https://github.com/astral-sh/uv/releases/download/0.13.7/uv-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/704009823"
 provenance = "github-attestations"

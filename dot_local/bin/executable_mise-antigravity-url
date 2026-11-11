@@ -19,9 +19,9 @@ url=''
 if [ -f "$lockfile" ]; then
     # mise emits quoted URL/version strings without escapes for these artifacts.
     url=$(awk -F '"' -v wanted="$version" -v platform="linux-$arch" '
-        /^\[\[tools\./ { tool = ($0 == "[[tools.\"http:antigravity\"]]"); release = ""; target = 0 }
+        /^\[\[tools\./ { tool = ($0 == "[[tools.\"http:agy\"]]" || $0 == "[[tools.\"http:antigravity\"]]"); release = ""; target = 0 }
         tool && /^version = / { release = $2 }
-        /^\[tools\./ { target = ($0 == "[tools.\"http:antigravity\".\"platforms." platform "\"]") }
+        /^\[tools\./ { target = ($0 == "[tools.\"http:agy\".\"platforms." platform "\"]" || $0 == "[tools.\"http:antigravity\".\"platforms." platform "\"]") }
         tool && release == wanted && target && /^url = / { print $2; exit }
     ' "$lockfile")
 fi
