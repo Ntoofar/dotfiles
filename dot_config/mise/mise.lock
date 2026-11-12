@@ -18,32 +18,32 @@ url = "https://github.com/junegunn/fzf/releases/download/v0.75.0/fzf-0.75.0-linu
 url_api = "https://api.github.com/repos/junegunn/fzf/releases/assets/720590794"
 
 [[tools.glab]]
-version = "1.129.0"
+version = "1.130.0"
 backend = "gitlab:gitlab-org/cli"
-specifiers = ["1.129.0"]
+specifiers = ["1.130.0"]
 
 [tools.glab."platforms.linux-arm64"]
-checksum = "sha256:bf3561a5830199bd3a3bcebd9d29f9f5d8b557133088028d18f2d2768c0a2a92"
-url = "https://gitlab.com/gitlab-org/cli/-/releases/v1.129.0/downloads/glab_1.129.0_linux_arm64.tar.gz"
-url_api = "https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/packages/generic/glab/1%2E129%2E0/glab_1%2E129%2E0_linux_arm64%2Etar%2Egz"
+checksum = "sha256:062d53acb0f2cbcc79a014600df1aa0fb440bb3a08a5d4900d3b49b553b22767"
+url = "https://gitlab.com/gitlab-org/cli/-/releases/v1.130.0/downloads/glab_1.130.0_linux_arm64.tar.gz"
+url_api = "https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/packages/generic/glab/1%2E130%2E0/glab_1%2E130%2E0_linux_arm64%2Etar%2Egz"
 
 [tools.glab."platforms.linux-x64"]
-checksum = "sha256:d05b25deef16d1149a0e519dd83e6288d3ec151ec154901b41c68fb2ac5b8267"
-url = "https://gitlab.com/gitlab-org/cli/-/releases/v1.129.0/downloads/glab_1.129.0_linux_amd64.tar.gz"
-url_api = "https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/packages/generic/glab/1%2E129%2E0/glab_1%2E129%2E0_linux_amd64%2Etar%2Egz"
+checksum = "sha256:ce06313b2075af25180cd195ab3496d42bc5857c85a1c12ba996838dfe9d822c"
+url = "https://gitlab.com/gitlab-org/cli/-/releases/v1.130.0/downloads/glab_1.130.0_linux_amd64.tar.gz"
+url_api = "https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/packages/generic/glab/1%2E130%2E0/glab_1%2E130%2E0_linux_amd64%2Etar%2Egz"
 
 [[tools.go]]
-version = "1.27.3"
+version = "1.27.4"
 backend = "core:go"
-specifiers = ["1.27.3"]
+specifiers = ["1.27.4"]
 
 [tools.go."platforms.linux-arm64"]
-checksum = "sha256:a06e99309dbcbdca1a8ccd2282c3ee146e55930886e26b4f1193269587165f49"
-url = "https://dl.google.com/go/go1.27.3.linux-arm64.tar.gz"
+checksum = "sha256:3392582988a273a87ab5043ee1b2c9c17a2c3c00580bf9326c47a2e0aaaeac92"
+url = "https://dl.google.com/go/go1.27.4.linux-arm64.tar.gz"
 
 [tools.go."platforms.linux-x64"]
-checksum = "sha256:65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40"
-url = "https://dl.google.com/go/go1.27.3.linux-amd64.tar.gz"
+checksum = "sha256:7226736c2339719cda28fbf3a54d71aa63bcefe376e98cef00034268dab24840"
+url = "https://dl.google.com/go/go1.27.4.linux-amd64.tar.gz"
 
 [[tools.helm]]
 version = "4.3.1"
@@ -74,7 +74,7 @@ url = "https://github.com/herdrdev/herdr/releases/download/v0.9.5/herdr-linux-x8
 url_api = "https://api.github.com/repos/herdrdev/herdr/releases/assets/640898235"
 
 [[tools."http:agy"]]
-version = "1.5.5"
+version = "1.5.6"
 backend = "http:agy"
 specifiers = ["latest"]
 
@@ -83,12 +83,12 @@ format = "tar.gz"
 rename_exe = "agy"
 
 [tools."http:agy"."platforms.linux-arm64"]
-checksum = "sha512:eb3e025c125c1c60a1493a0c1d9cdf15e8372277d6d3b015e8d29e1bd095344eece5cbc2447f238148bd259d5f2daa0f75641adc0ac02b5fad57edc4ed842d59"
-url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.5-6740358537805824/linux-arm/cli_linux_arm64.tar.gz"
+checksum = "sha512:ed103a9e2f10d99eaf2988d2ace55ffffa08b6f9d3b2297459dc42617dfa2386ed984b1231efda4d93279a1deaab9a7e51b85ed06938527870aaec21bba27254"
+url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.6-6212266538958848/linux-arm/cli_linux_arm64.tar.gz"
 
 [tools."http:agy"."platforms.linux-x64"]
-checksum = "blake3:acf53b3e0ef080fa6982a2943c77c58425b1e83d08db9daad4761cb1ca52d8bd"
-url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.5-6740358537805824/linux-x64/cli_linux_x64.tar.gz"
+checksum = "blake3:54fcc59156cb6ed8af7f628ddaadf14a6e1d25d5732b98d7f004f35209fef6da"
+url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.6-6212266538958848/linux-x64/cli_linux_x64.tar.gz"
 
 [[tools."http:antigravity"]]
 version = "1.4.2"
