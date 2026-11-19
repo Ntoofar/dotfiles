@@ -19,7 +19,7 @@ try {
   const result = run();
   assert.equal(result.status, 0, 'mock template render failed: ' + result.stderr);
   const rendered = parse(result.stdout);
-  assert.equal(rendered.outbounds.find(x => x.tag === 'R6-5').password, 'mock-yiyonex-password');
+  assert.equal(rendered.outbounds.find(x => x.tag === 'R6-5|US').password, 'mock-yiyonex-password');
   for (const failure of ['missing', 'empty', 'invalid', 'duplicate', 'no-fields', 'wrong', 'deleted']) {
     const failed = run('yiyonex-' + failure);
     assert.notEqual(failed.status, 0, 'reject invalid Yiyonex credentials: ' + failure);
@@ -28,7 +28,7 @@ try {
   }
   const escapedYiyonex = run('yiyonex-escape');
   assert.equal(escapedYiyonex.status, 0);
-  assert.equal(parse(escapedYiyonex.stdout).outbounds.find(x => x.tag === 'R6-5').password, 'pass"\\word\n');
+  assert.equal(parse(escapedYiyonex.stdout).outbounds.find(x => x.tag === 'R6-5|US').password, 'pass"\\word\n');
   const baselineText = fs.readFileSync(path.join(root, 'tests/fixtures/sing-box-v1.14.0.mock.jsonc'), 'utf8');
   assert.deepEqual(inspect(result.stdout).comments, inspect(baselineText).comments, 'preserve every original comment in order');
   assert.equal(result.stdout, baselineText, 'preserve JSONC formatting; replace credential values only');
