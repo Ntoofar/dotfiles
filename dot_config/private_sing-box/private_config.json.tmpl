@@ -1073,6 +1073,28 @@
     },
     {
       "type": "vless",
+      "tag": "relay-12-12-100-99-8001",
+      "server": {{ index $fields "SERVER" | toJson }},
+      "server_port": 19528,
+      "uuid": {{ index $fields "UUID-8001" | toJson }},
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.amazon.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "short_id": "29fc1d3f0f709971"
+        }
+      },
+      "detour": "auto-all"
+    },
+    {
+      "type": "vless",
       "tag": "res-us-9-249-28-164-8003",
       "server": {{ index $fields "SERVER" | toJson }},
       "server_port": 19528,
@@ -1098,6 +1120,28 @@
         "min_streams": 4,
         "padding": true
       }
+    },
+    {
+      "type": "vless",
+      "tag": "relay-9-249-28-164-8003",
+      "server": {{ index $fields "SERVER" | toJson }},
+      "server_port": 19528,
+      "uuid": {{ index $fields "UUID-8003" | toJson }},
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.amazon.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "short_id": "29fc1d3f0f709971"
+        }
+      },
+      "detour": "auto-all"
     },
     {
       "type": "vless",
