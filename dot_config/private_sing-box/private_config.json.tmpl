@@ -49,7 +49,7 @@
       {
         "type": "https",
         "tag": "dns-direct",
-        "server": "223.5.5.5",
+        "server": "223.5.5.5", // ali
         "server_port": 443
       },
       {
@@ -61,52 +61,132 @@
       },
       {
         "type": "udp",
-        "tag": "dns-yiyonex-bootstrap",
+        "tag": "dns-direct-tx",
         "server": "119.29.29.29",
         "server_port": 53
       },
       {
         "type": "https",
-        "tag": "dns-yiyonex",
+        "tag": "dns-yiy-cdn1",
         "server": "cdn1.nexolinkapi.com",
         "server_port": 25985,
         "path": "/0x3f",
+        "connect_timeout": "3s",
         "domain_resolver": {
-          "server": "dns-yiyonex-bootstrap",
+          "server": "dns-direct-tx",
           "strategy": "ipv4_only"
         }
       },
       {
         "type": "https",
-        "tag": "dns-yiyonex-2",
+        "tag": "dns-yiy-cdn2",
         "server": "cdn2.nexolinkapi.com",
         "server_port": 443,
         "path": "/0x3f",
+        "connect_timeout": "3s",
         "domain_resolver": {
-          "server": "dns-yiyonex-bootstrap",
+          "server": "dns-direct-tx",
           "strategy": "ipv4_only"
         }
       },
       {
         "type": "https",
-        "tag": "dns-yiyonex-3",
+        "tag": "dns-yiy-cdnhost",
         "server": "cdnhost.nexolinkapi.com",
         "server_port": 25985,
         "path": "/0x3f",
+        "connect_timeout": "3s",
         "domain_resolver": {
-          "server": "dns-yiyonex-bootstrap",
+          "server": "dns-direct-tx",
           "strategy": "ipv4_only"
         }
       },
       {
         "type": "https",
-        "tag": "dns-yiyonex-4",
+        "tag": "dns-yiy-ip",
         "server": "118.128.63.250",
         "server_port": 443,
-        "path": "/0x3f"
+        "path": "/0x3f",
+        "connect_timeout": "3s"
       }
     ],
     "rules": [
+      {
+        "domain_suffix": [
+          ".yiyonex.com"
+        ],
+        "action": "evaluate",
+        "server": "dns-yiy-cdn1",
+        "tag": "dns-yiy-cdn1-ans",
+        "timeout": "4s",
+        "speculative": false
+      },
+      {
+        "match_response": "dns-yiy-cdn1-ans",
+        "response_rcode": "NOERROR",
+        "ip_accept_any": true,
+        "action": "respond",
+        "race": true
+      },
+      {
+        "domain_suffix": [
+          ".yiyonex.com"
+        ],
+        "action": "evaluate",
+        "server": "dns-yiy-cdn2",
+        "tag": "dns-yiy-cdn2-ans",
+        "timeout": "4s",
+        "speculative": true
+      },
+      {
+        "match_response": "dns-yiy-cdn2-ans",
+        "response_rcode": "NOERROR",
+        "ip_accept_any": true,
+        "action": "respond",
+        "race": true
+      },
+      {
+        "domain_suffix": [
+          ".yiyonex.com"
+        ],
+        "action": "evaluate",
+        "server": "dns-yiy-cdnhost",
+        "tag": "dns-yiy-cdnhost-ans",
+        "timeout": "4s",
+        "speculative": true
+      },
+      {
+        "match_response": "dns-yiy-cdnhost-ans",
+        "response_rcode": "NOERROR",
+        "ip_accept_any": true,
+        "action": "respond",
+        "race": true
+      },
+      {
+        "domain_suffix": [
+          ".yiyonex.com"
+        ],
+        "action": "evaluate",
+        "server": "dns-yiy-ip",
+        "tag": "dns-yiy-ip-ans",
+        "timeout": "4s",
+        "speculative": true
+      },
+      {
+        "match_response": "dns-yiy-ip-ans",
+        "response_rcode": "NOERROR",
+        "ip_accept_any": true,
+        "action": "respond",
+        "race": true
+      },
+      {
+        "domain_suffix": [
+          ".yiyonex.com"
+        ],
+        "action": "reject",
+        "method": "default",
+        "no_drop": true
+      },
       {
         "domain_suffix": [
           "openai.com",
@@ -134,6 +214,7 @@
           "gvt2.com",
           "gvt1.com",
           "googleapis.com",
+          "google.com",
 
           "perplexity.ai",
 
@@ -193,7 +274,6 @@
       },
       {
         "domain_suffix": [
-          // "account.cogdb.idic",
           "wuya-ai.com",
           "transwarp.io",
           "transwarp-hub.ai"
@@ -218,13 +298,6 @@
     "final": "dns-proxy",
     "strategy": "ipv4_only"
   },
-
-  "http_clients": [
-    {
-      "tag": "rule-set-proxy",
-      "detour": "res-select"
-    }
-  ],
 
   "inbounds": [
     {
@@ -354,6 +427,28 @@
     },
     {
       "type": "vless",
+      "tag": "relay-48-47-1-98-8004",
+      "server": {{ index $fields "SERVER" | toJson }},
+      "server_port": 19528,
+      "uuid": {{ index $fields "UUID-8004" | toJson }},
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.amazon.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": {{ index $fields "PUBLIC_KEY" | toJson }},
+          "short_id": "29fc1d3f0f709971"
+        }
+      },
+      "detour": "R6-5"
+    },
+    {
+      "type": "vless",
       "tag": "res-us-48-47-3-96-8005",
       "server": {{ index $fields "SERVER" | toJson }},
       "server_port": 19528,
@@ -405,12 +500,13 @@
     {
       "type": "trojan",
       "tag": "R6-5",
-      "server": "cs2s.yiyonex.com",
+      "server": "cs5b.yiyonex.com",
       "server_port": 34563,
       "password": {{ $yiyonexPassword | toJson }},
       "domain_resolver": {
-        "server": "dns-yiyonex",
-        "strategy": "ipv4_only"
+        "server": "dns-yiy-cdn1",
+        "strategy": "ipv4_only",
+        "timeout": "6s"
       },
       "tls": {
         "enabled": true,
@@ -430,25 +526,24 @@
         "res-us-48-47-3-96-8005",
         "res-us-48-47-1-98-8004",
         "res-us-12-12-100-99-8001",
-        "res-us-9-249-28-164-8003"
+        "res-us-9-249-28-164-8003",
+        "R6-5"
       ],
       "default": "relay-48-47-3-96-8005"
-      // "default": "R6-5"
-      // "outbounds": [
-      //   "res-us-48-47-3-96-8005",
-      //   "res-us-48-47-1-98-8004",
-      //   "res-us-12-12-100-99-8001",
-      //   "res-us-9-249-28-164-8003"
-      // ],
-      // "default": "res-us-48-47-3-96-8005"
+    }
+  ],
+
+  "http_clients": [
+    {
+      "tag": "rule-set-downloader",
+      "detour": "res-select"
     }
   ],
 
   "route": {
     "auto_detect_interface": true, 
     "default_domain_resolver": "dns-proxy",
-    // "default_domain_resolver": "dns-internal",
-    "default_http_client": "rule-set-proxy",
+    "default_http_client": "rule-set-downloader",
 
     "rules": [
       {
@@ -485,6 +580,7 @@
           "gvt2.com",
           "gvt1.com",
           "googleapis.com",
+          "google.com",
 
           "perplexity.ai",
 
@@ -540,7 +636,6 @@
         ],
         "action": "route",
         "outbound": "res-select"
-        // "outbound": "res-us-48-47-3-96-8005"
       },
       {
         "domain_suffix": [
@@ -586,7 +681,6 @@
         ],
         "action": "route",
         "outbound": "res-select"
-        // "outbound": "res-us-48-47-3-96-8005"
       },
       {
         "rule_set": [
@@ -603,7 +697,6 @@
         "invert": true, 
         "action": "route",
         "outbound": "res-select"
-        // "outbound": "res-us-48-47-3-96-8005"
       }
     ],
     "rule_set": [
@@ -611,68 +704,101 @@
         "tag": "geosite-category-ads-all",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-category-ads-all.srs"
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-category-ads-all.srs",
+        "initial_path": "{{ .chezmoi.homeDir }}/.config/sing-box/rule-set/geosite-category-ads-all.srs",
+        "http_client": "rule-set-downloader",
+        "update_interval": "1d"
       },
       {
         "tag": "geosite-cn",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs"
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs",
+        "initial_path": "{{ .chezmoi.homeDir }}/.config/sing-box/rule-set/geosite-cn.srs",
+        "http_client": "rule-set-downloader",
+        "update_interval": "1d"
       },
       {
         "tag": "geosite-geolocation-!cn",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-geolocation-!cn.srs"
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-geolocation-!cn.srs",
+        "initial_path": "{{ .chezmoi.homeDir }}/.config/sing-box/rule-set/geosite-geolocation-!cn.srs",
+        "http_client": "rule-set-downloader",
+        "update_interval": "1d"
       },
       {
         "tag": "geoip-cn",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs"
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs",
+        "initial_path": "{{ .chezmoi.homeDir }}/.config/sing-box/rule-set/rule-set/geoip-cn.srs",
+        "http_client": "rule-set-downloader",
+        "update_interval": "1d"
       },
       {
         "tag": "geosite-openai",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-openai.srs"
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-openai.srs",
+        "initial_path": "{{ .chezmoi.homeDir }}/.config/sing-box/rule-set/geosite-openai.srs",
+        "http_client": "rule-set-downloader",
+        "update_interval": "1d"
       },
       {
         "tag": "geosite-anthropic",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-anthropic.srs"
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-anthropic.srs",
+        "initial_path": "{{ .chezmoi.homeDir }}/.config/sing-box/rule-set/geosite-anthropic.srs",
+        "http_client": "rule-set-downloader",
+        "update_interval": "1d"
       },
       {
         "tag": "geosite-google-gemini",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google-gemini.srs"
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google-gemini.srs",
+        "initial_path": "{{ .chezmoi.homeDir }}/.config/sing-box/rule-set/geosite-google-gemini.srs",
+        "http_client": "rule-set-downloader",
+        "update_interval": "1d"
       },
       {
         "tag": "geosite-github-copilot",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-github-copilot.srs"
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-github-copilot.srs",
+        "initial_path": "{{ .chezmoi.homeDir }}/.config/sing-box/rule-set/geosite-github-copilot.srs",
+        "http_client": "rule-set-downloader",
+        "update_interval": "1d"
       },
       {
         "tag": "geosite-jetbrains-ai",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-jetbrains-ai.srs"
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-jetbrains-ai.srs",
+        "initial_path": "{{ .chezmoi.homeDir }}/.config/sing-box/rule-set/geosite-jetbrains-ai.srs",
+        "http_client": "rule-set-downloader",
+        "update_interval": "1d"
       },
       {
         "tag": "geosite-apple-intelligence",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-apple-intelligence.srs"
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-apple-intelligence.srs",
+        "initial_path": "{{ .chezmoi.homeDir }}/.config/sing-box/rule-set/geosite-apple-intelligence.srs",
+        "http_client": "rule-set-downloader",
+        "update_interval": "1d"
       }
     ],
     "final": "res-select"
-    // "final": "res-us-48-47-3-96-8005"
   },
 
   "experimental": {
+    "cache_file": {
+      // "store_dns": true,
+      "enabled": true
+    },
     "clash_api": {
       "external_controller": "0.0.0.0:9529",
       "access_control_allow_origin": [
