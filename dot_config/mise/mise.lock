@@ -74,7 +74,7 @@ url = "https://github.com/herdrdev/herdr/releases/download/v0.9.5/herdr-linux-x8
 url_api = "https://api.github.com/repos/herdrdev/herdr/releases/assets/640898235"
 
 [[tools."http:agy"]]
-version = "1.5.6"
+version = "1.5.13"
 backend = "http:agy"
 specifiers = ["latest"]
 
@@ -83,12 +83,12 @@ format = "tar.gz"
 rename_exe = "agy"
 
 [tools."http:agy"."platforms.linux-arm64"]
-checksum = "sha512:ed103a9e2f10d99eaf2988d2ace55ffffa08b6f9d3b2297459dc42617dfa2386ed984b1231efda4d93279a1deaab9a7e51b85ed06938527870aaec21bba27254"
-url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.6-6212266538958848/linux-arm/cli_linux_arm64.tar.gz"
+checksum = "sha512:dccea2eb455099f5175f0c87cc47b38fcefe4cb0cb44dea3927469bb4bbf68ac3c0b30fc04affb24c17e90959386a93c3785e8e4b8b1a3338ca4e4d57b80057b"
+url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.13-5999302598852608/linux-arm/cli_linux_arm64.tar.gz"
 
 [tools."http:agy"."platforms.linux-x64"]
-checksum = "blake3:54fcc59156cb6ed8af7f628ddaadf14a6e1d25d5732b98d7f004f35209fef6da"
-url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.6-6212266538958848/linux-x64/cli_linux_x64.tar.gz"
+checksum = "blake3:f175af5735dabab4626f1ce9baf711f55d3d99001428d288e11830d1a9b0db7c"
+url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.13-5999302598852608/linux-x64/cli_linux_x64.tar.gz"
 
 [[tools."http:antigravity"]]
 version = "1.4.2"
